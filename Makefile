@@ -22,7 +22,7 @@ ${EXEC}: ${OBJ}
 .PHONY: clean
 
 debug: all
-debug: CFLAGS += -DDEBUG -fsanitize=address
+debug: CC += -fsanitize=address -DDEBUG -g
 
 clean:
 	${RM} ${EXEC}
