@@ -16,6 +16,9 @@ typedef enum
     // String
     STRING,
 
+    // Identifier
+    IDENTIFIER,
+
     // Commands
     CD, LS, MKDIR, TOUCH, PWD, RM,
     MV, CP, CAT, ECHO,
@@ -35,13 +38,28 @@ typedef enum
     PIPE, LPAREN, RPAREN, NEWLINE
 } e_token_type;
 
-typedef struct {
+typedef struct
+{
     char*        str;
     e_token_type token_type;
 } s_token;
 
+typedef struct
+{
+    s_token* data;
+    size_t token_count;
+    size_t list_size;
+} s_token_list;
+
 e_token_type check_reserved(char* str);
-s_token create_token(char* str, e_token_type token_type);
+int check_number(char* str);
+void search_token(s_token* token, char* str, e_token_type token_type);
+void create_token(s_token* token, char* str, e_token_type token_type);
 void free_token(s_token* token);
+
+s_token_list create_token_list(size_t list_size);
+void add_token(s_token_list* tokens, s_token token);
+s_token* get_token(s_token_list* tokens, size_t index);
+void free_tokens(s_token_list* token);
 
 #endif
