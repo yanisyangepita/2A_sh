@@ -32,6 +32,8 @@ static s_token reserved_words[NB_RESERVED] =
     {"(",     LPAREN},
     {")",     RPAREN},
     {"\0",    NEWLINE},
+    {"\"",    DQUOTE},
+    {"\'",    SQUOTE},
     {"&&",    AND_IF},
     {"||",    OR_IF},
     {";;",    DSEMI},

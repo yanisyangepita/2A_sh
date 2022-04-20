@@ -34,7 +34,7 @@ void lex(s_token_list* tokens, char* source)
                     b_is_dquote = 1;
                 b_break = 1;
             }
-            else if (source[i] == '\'' && !b_is_dquote)
+            else if(source[i] == '\'' && !b_is_dquote)
             {
                 if(b_is_squote)
                     b_is_squote = 0;
@@ -57,7 +57,7 @@ void lex(s_token_list* tokens, char* source)
         lex[lex_index] = '\0';
 
         // End of the source
-        if(source[i] == '\0')
+        if(lex_index == 0 && source[i] == '\0')
             break;
 
         // Skip empty lines and tabs
