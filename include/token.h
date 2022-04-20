@@ -52,7 +52,7 @@ typedef struct
 } s_token_list;
 
 e_token_type check_reserved(char* str);
-int check_number(char* str);
+e_token_type check_number(char* str);
 void search_token(s_token* token, char* str, e_token_type token_type);
 void create_token(s_token* token, char* str, e_token_type token_type);
 void free_token(s_token* token);

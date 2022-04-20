@@ -60,16 +60,21 @@ e_token_type check_reserved(char* str)
     if(str[0] >= '0' && str[0] <= '9')
         errx(EXIT_FAILURE, "check_reserved: Not a valid token\n");
     else
+    {
+#ifdef DEBUG
+        printf("%s -> IDENTIFIER\n", str);
+#endif
         return IDENTIFIER;
+    }
 }
 
-int check_number(char* str)
+e_token_type check_number(char* str)
 {
     char* p = str;
     while(*p != '\0')
     {
         if(*p < '0' || *p > '9')
-            errx(EXIT_FAILURE, "check_number: Not a valid number\n");
+            return IDENTIFIER;
 
         p += 1;
     }
@@ -77,13 +82,19 @@ int check_number(char* str)
     printf("%s -> NUMBER\n", str);
 #endif
 
-    return EXIT_SUCCESS;
+    return NUMBER;
 }
 
 void search_token(s_token* token, char* str, e_token_type token_type)
 {
     if(token_type == NUMBER)
-        check_number(str);
+    {
+        token_type = check_number(str);
+#ifdef DEBUG
+        if(token_type == IDENTIFIER)
+            printf("%s -> IDENTIFIER\n", str);
+#endif
+    }
     //else if(token_type != STRING)
     else
         token_type = check_reserved(str);
@@ -125,6 +136,10 @@ void add_token(s_token_list* tokens, s_token token)
     s_token* new_token = &tokens->data[tokens->token_count];
     tokens->token_count += 1;
     create_token(new_token, token.str, token.token_type);
+#ifdef DEBUG
+    if(token.token_type == STRING)
+        printf("%s -> STRING\n", token.str);
+#endif
 }
 
 s_token* get_token(s_token_list* tokens, size_t index)
