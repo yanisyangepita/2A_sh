@@ -2,7 +2,7 @@
 
 void lex(s_token_list* tokens, char* source)
 {
-    char* lex = malloc(sizeof(char) * 128);
+    char lex[256];
     size_t lex_index = 0 ;
     size_t i = 0;
     int b_is_squote = 0;
@@ -68,7 +68,6 @@ void lex(s_token_list* tokens, char* source)
             continue;
         }
 
-
         // - STRING
         if((b_is_squote && lex[0] != '\'') || (b_is_dquote && lex[0] != '\"'))
             create_token(&token, lex, STRING);
@@ -87,12 +86,14 @@ void lex(s_token_list* tokens, char* source)
         b_break = 0;
     }
 
+    lex[0] = '\0';
+
     // NEWLINE
-    create_token(&token, '\0', NEWLINE);
-#ifdef DEBUG
-    printf("\\0 -> NEWLINE");
-#endif
+    create_token(&token, lex, NEWLINE);
     add_token(tokens, token);
 
-    free(lex);
+#ifdef DEBUG
+    for(size_t i = 0; i < tokens->token_count; i++)
+        printf("%s\n", tokens->data[i].str);
+#endif
 }

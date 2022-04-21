@@ -51,21 +51,13 @@ e_token_type check_reserved(char* str)
     for(size_t i = 0; i < NB_RESERVED; i++)
     {
         if(!strcmp(str, reserved_words[i].str))
-        {
-#ifdef DEBUG
-            printf("%s -> %s\n", str, reserved_words[i].str);
-#endif
             return reserved_words[i].token_type;
-        }
     }
 
     if(str[0] >= '0' && str[0] <= '9')
         errx(EXIT_FAILURE, "check_reserved: Not a valid token\n");
     else
     {
-#ifdef DEBUG
-        printf("%s -> IDENTIFIER\n", str);
-#endif
         return IDENTIFIER;
     }
 }
@@ -80,9 +72,6 @@ e_token_type check_number(char* str)
 
         p += 1;
     }
-#ifdef DEBUG
-    printf("%s -> NUMBER\n", str);
-#endif
 
     return NUMBER;
 }
@@ -90,14 +79,7 @@ e_token_type check_number(char* str)
 void search_token(s_token* token, char* str, e_token_type token_type)
 {
     if(token_type == NUMBER)
-    {
         token_type = check_number(str);
-#ifdef DEBUG
-        if(token_type == IDENTIFIER)
-            printf("%s -> IDENTIFIER\n", str);
-#endif
-    }
-    //else if(token_type != STRING)
     else
         token_type = check_reserved(str);
 
@@ -107,23 +89,21 @@ void search_token(s_token* token, char* str, e_token_type token_type)
 
 void create_token(s_token* token, char* str, e_token_type token_type)
 {
-    token->str = str;
+    if(token_type == NEWLINE)
+        token->str = "\0";
+    else
+    {
+        token->str = malloc(sizeof(char) * (strlen(str) + 1));
+        strcpy(token->str, str);
+    }
     token->token_type = token_type;
 }
 
-void free_token(s_token* token)
+void create_token_list(s_token_list* tokens, size_t list_size)
 {
-    free(token);
-}
-
-s_token_list create_token_list(size_t list_size)
-{
-    s_token_list tokens;
-    tokens.data = (s_token*) malloc(sizeof(s_token) * list_size);
-    tokens.token_count = 0;
-    tokens.list_size = list_size;
-
-    return tokens;
+    tokens->data = (s_token*) malloc(sizeof(s_token) * list_size);
+    tokens->token_count = 0;
+    tokens->list_size = list_size;
 }
 
 void add_token(s_token_list* tokens, s_token token)
@@ -135,13 +115,10 @@ void add_token(s_token_list* tokens, s_token token)
                 sizeof(s_token) * tokens->list_size);
     }
 
-    s_token* new_token = &tokens->data[tokens->token_count];
-    tokens->token_count += 1;
+    s_token *new_token = &tokens->data[tokens->token_count];
     create_token(new_token, token.str, token.token_type);
-#ifdef DEBUG
-    if(token.token_type == STRING)
-        printf("%s -> STRING\n", token.str);
-#endif
+    tokens->data[tokens->token_count] = *new_token;
+    tokens->token_count += 1;
 }
 
 s_token* get_token(s_token_list* tokens, size_t index)
@@ -151,8 +128,5 @@ s_token* get_token(s_token_list* tokens, size_t index)
 
 void free_tokens(s_token_list* tokens)
 {
-    for(size_t i = 0; i < tokens->token_count; i++)
-        free_token(&tokens->data[i]);
-
     free(tokens->data);
 }
