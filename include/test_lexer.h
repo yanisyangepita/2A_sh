@@ -6,6 +6,8 @@
 #include <err.h>
 #include <string.h>
 
+#include "lexer.h"
+
 void test_lexer(int argc, char** argv);
 
 #endif
