@@ -3,13 +3,19 @@
 
 #include "token.h"
 
-typedef struct
+struct s_ast
 {
     s_token token;
-    s_ast right;
-    s_ast left;
-} s_ast;
+    struct s_ast *right;
+    struct s_ast *left;
+};
+
+typedef struct s_ast s_ast;
 
 s_ast *ast_create(s_token token);
+
+#ifdef DEBUG
+void ast_print(s_ast* ast);
+#endif
 
 #endif
