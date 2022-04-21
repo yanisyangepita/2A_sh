@@ -55,9 +55,8 @@ e_token_type check_reserved(char* str);
 e_token_type check_number(char* str);
 void search_token(s_token* token, char* str, e_token_type token_type);
 void create_token(s_token* token, char* str, e_token_type token_type);
-void free_token(s_token* token);
 
-s_token_list create_token_list(size_t list_size);
+void create_token_list(s_token_list* tokens, size_t list_size);
 void add_token(s_token_list* tokens, s_token token);
 s_token* get_token(s_token_list* tokens, size_t index);
 void free_tokens(s_token_list* token);
