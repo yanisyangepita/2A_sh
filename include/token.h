@@ -6,7 +6,7 @@
 #include <err.h>
 #include <string.h>
 
-#define NB_RESERVED 42
+#define NB_RESERVED 43
 
 typedef enum
 {
@@ -35,7 +35,7 @@ typedef enum
     CLOBBER,
 
     // Other
-    PIPE, LPAREN, RPAREN, NEWLINE, SQUOTE, DQUOTE
+    PIPE, LPAREN, RPAREN, NEWLINE, SQUOTE, DQUOTE, OPTION
 } e_token_type;
 
 typedef struct

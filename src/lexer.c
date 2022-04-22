@@ -71,6 +71,9 @@ void lex(s_token_list* tokens, char* source)
         // - STRING
         if((b_is_squote && lex[0] != '\'') || (b_is_dquote && lex[0] != '\"'))
             create_token(&token, lex, STRING);
+        // OPTION
+        else if(lex[0] == '-')
+            create_token(&token, lex, OPTION);
         // - NUMBER
         else if(lex[0] >= '0' && lex[0] <= '9')
             search_token(&token, lex, NUMBER);
