@@ -6,7 +6,7 @@
 #include <err.h>
 #include <string.h>
 
-#define NB_RESERVED 43
+#define NB_RESERVED 42
 
 typedef enum
 {
