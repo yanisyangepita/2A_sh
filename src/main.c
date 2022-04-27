@@ -4,14 +4,10 @@
 #include <string.h>
 
 #include "../include/test_lexer.h"
-#include "../include/cat.h"
+#include "../include/pwd.h"
 
-int main(int argc, char** argv)
+int main()
 {
-    if(argc < 2)
-        errx(EXIT_FAILURE, "oh no\n");
-
-    cat(argv[1], argv[2]);
-
+    pwd();
     return 0;
 }

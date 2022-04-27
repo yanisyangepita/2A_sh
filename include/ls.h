@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <err.h>
+#include <string.h>
+#include "../include/pwd.h"
 
 void ls(char* options);
 

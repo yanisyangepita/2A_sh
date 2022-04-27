@@ -2,5 +2,23 @@
 
 void ls(char* options)
 {
-    printf("%s\n", options);
+    if(options != NULL)
+    {
+        // ls -a
+        if(!strcmp(options, "-a"))
+        {
+        }
+        // ls -l
+        else if(!strcmp(options, "l"))
+        {
+        }
+    }
+    // ls
+    else
+    {
+    }
+
+    printf("%s\n", path);
 }
+
+
