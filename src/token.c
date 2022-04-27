@@ -115,9 +115,14 @@ void add_token(s_token_list* tokens, s_token token)
                 sizeof(s_token) * tokens->list_size);
     }
 
-    s_token *new_token = &tokens->data[tokens->token_count];
-    create_token(new_token, token.str, token.token_type);
-    tokens->data[tokens->token_count] = *new_token;
+    if(token.token_type == OPTION || token.token_type == STRING)
+        tokens->data[tokens->token_count] = token;
+    else
+    {
+        s_token *new_token = &tokens->data[tokens->token_count];
+        create_token(new_token, token.str, token.token_type);
+        tokens->data[tokens->token_count] = *new_token;
+    }
     tokens->token_count += 1;
 }
 
