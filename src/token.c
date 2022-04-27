@@ -128,11 +128,5 @@ s_token* get_token(s_token_list* tokens, size_t index)
 
 void free_tokens(s_token_list* tokens)
 {
-    for(size_t i = 0; i < tokens->token_count; i++)
-    {
-        if(i < tokens->token_count - 1)
-            free(tokens->data[i].str);
-    }
-
     free(tokens->data);
 }
