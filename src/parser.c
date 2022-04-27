@@ -64,7 +64,7 @@ s_ast *found_type(s_token_list *tkl, size_t *current, size_t end,
         e_token_type type)
 {
     size_t i = *current;
-    if (type == PARAMETERS)
+    if (type == IDENTIFIER)
         i = end;
     while (i < end && tkl->data[i].token_type == type)
     {
@@ -74,7 +74,7 @@ s_ast *found_type(s_token_list *tkl, size_t *current, size_t end,
     if (i != *current)
     {
         s_token tok = tkl->data[*current];
-        tok->token_type = type;
+        tok.token_type = type;
         char *str = concat_tokens(tkl, *current, i);
         /* s_token *tok = malloc(sizeof(s_token)); */
         /* if (tok == NULL) */
@@ -95,7 +95,7 @@ void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     if (ast->token.token_type == ECHO)
     {
         ast->left = found_type(tkl, &current, end, OPTION);
-        ast->right = found_type(tkl, &current, end, PARAMETERS);
+        ast->right = found_type(tkl, &current, end, IDENTIFIER);
     }
     else
         errx(1, "Not a function :x");
