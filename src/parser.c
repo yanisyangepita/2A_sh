@@ -20,26 +20,63 @@ char *str_concat(char* s1, char* s2)
     return res;
 }
 
-int is_separator(s_token* token)
+char **create_opt(size_t *len, s_token tok)
 {
-    if (token->token_type == PIPE)
-        return 1;
-    else if (token->token_type == NEWLINE)
-        return 1;
-    return 0;
-}
-
-void found_next(s_token_list* tkl, size_t *next_prog)
-{
-    for (size_t i = *next_prog; i < tkl->token_count; i++)
+    char **opt = malloc(sizeof(char *));
+    char *str = malloc(sizeof(char));
+    str[0] = 0;
+    size_t i_str = 0;
+    size_t i = 0;
+    size_t i_opt = 0;
+    while(tok.str[i] != 0)
     {
-        if (is_separator(&tkl->data[i]) == 1)
+        if (tok.str[i] == '-')
         {
-            *next_prog = i;
-            return;
+            i_str = 0;
+            i++;
+        }
+        else if (tok.str[i] == ' ')
+        {
+            opt = realloc(opt, sizeof(char *) * (i_opt + 1));
+            opt[i_opt] = str;
+            str = malloc(sizeof(char));
+            str[0] = 0;
+            i_opt++;
+            i_str = 0;
+            i++;
+        }
+        else
+        {
+            str = realloc(str, sizeof(char) * (i_str + 2));
+            str[i_str] = tok.str[i];
+            i_str++;
+            str[i_str] = 0;
+            i++;
         }
     }
-    *next_prog = tkl->token_count;
+    if (i_str != 0)
+    {
+        opt = realloc(opt, sizeof(char *) * (i_opt + 1));
+        opt[i_opt] = str;
+        i_opt++;
+    }
+    /* free(str); */
+    *len = i_opt;
+    return opt;
+}
+
+size_t found_token(s_token_list* tkl, e_token_type type,
+        size_t start, size_t end)
+{
+    for (size_t i = start; i < end; i++)
+    {
+        if (tkl->data[i].token_type == type ||
+                tkl->data[i].token_type == NEWLINE)
+        {
+            return i;
+        }
+    }
+    return end;
 }
 
 char *concat_tokens(s_token_list* tkl, size_t start, size_t end)
@@ -90,12 +127,28 @@ s_ast *found_type(s_token_list *tkl, size_t *current, size_t end,
     return ast;
 }
 
+void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+
+    size_t len_opt = 0;
+    char **opt = create_opt(&len_opt, ast->left->token);
+
+#ifdef DEBUG
+    for (size_t i = 0; i < len_opt; i++)
+        printf("opt : %s\n", opt[i]);
+#endif
+    for (size_t i = 0; i < len_opt; i++)
+        free(opt[i]);
+    free(opt);
+}
+
 void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     if (ast->token.token_type == ECHO)
     {
-        ast->left = found_type(tkl, &current, end, OPTION);
-        ast->right = found_type(tkl, &current, end, IDENTIFIER);
+        parse_echo(ast, tkl, current, end);
     }
     else
         errx(1, "Not a function :x");
@@ -113,7 +166,7 @@ void parse(s_token_list *tkl)
         current_index++;
 
 
-        found_next(tkl, &next_prog);
+        next_prog = found_token(tkl, PIPE, current_index, tkl->token_count);
         found_func(prog, tkl, current_index, next_prog);
     }
 
