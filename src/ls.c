@@ -18,7 +18,7 @@ void ls(char* options)
     {
     }
 
-    printf("%s\n", path);
+    /* printf("%s\n", path); */
 }
 
 

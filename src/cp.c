@@ -17,6 +17,6 @@ void cp(char* source, char* dest)
         fputc(c, file2);
     }
 
-    fclose(file2);
+    fclose(file1);
     fclose(file2);
 }
