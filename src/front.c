@@ -26,7 +26,7 @@ int front(void)
     int cond = 42;
     char* input = calloc(ARG_MAX, sizeof(char));
 
-    printf("[%s: %s]$ ",login, wd);
+    printf("2A-SH / NOT BASH <%s: %s>$ ",login, wd);
     cond = scanf("%s", input);
 
     while(cond)
