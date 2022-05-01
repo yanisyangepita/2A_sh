@@ -4,10 +4,11 @@
 #include <string.h>
 
 #include "../include/test_lexer.h"
-#include "../include/pwd.h"
+#include "../include/cp.h"
 
-int main()
+int main(int argc, char** argv)
 {
-    pwd();
+    if(argc == 4)
+        cp(argv[2], argv[3]);
     return 0;
 }
