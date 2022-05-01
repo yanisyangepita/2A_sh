@@ -1,17 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <err.h>
-#include <string.h>
-#include <unistd.h>
-
 #include "../include/front.h"
-#include "../include/token.h"
-
-
-
-
-
-
 
 int front(void)
 {
@@ -21,7 +8,7 @@ int front(void)
 
     puts(
 "       ::::::::      :::                                ::::::::  :::    :::\n"
-"    :+:    :+:   :+: :+:                             :+:    :+: :+:    :+:  \n"
+"     :+:    :+:   :+: :+:                             :+:    :+: :+:    :+:  \n"
 "          +:+   +:+   +:+                            +:+        +:+    +:+   \n"
 "       +#+    +#++:++#++:      +#++:++#++:++        +#++:++#++ +#++:++#++    \n"
 "    +#+      +#+     +#+                                  +#+ +#+    +#+     \n"
@@ -53,7 +40,7 @@ int front(void)
         free_tokens(&tokens);
 
         /* printf("var : %s\n", input); */
-        printf("<%s: %s>$ ",login, wd);
+        printf("2A-SH / NOT BASH <%s: %s>$ ",login, wd);
         cond = scanf("%s", input);
     }
 
