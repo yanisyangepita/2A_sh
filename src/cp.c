@@ -3,7 +3,6 @@
 char* get_file_name(char* path)
 {
     char* file_name = malloc(sizeof(char));
-    // Get the index of the last '/'
     size_t index = 0;
     size_t i = 0;
     while(path[i] != '\0')
@@ -36,7 +35,7 @@ void cp(char* source, char* dest)
     file2 = fopen(dest, "w");
 
     if(file1 == NULL)
-        errx(EXIT_FAILURE, "not valid argument()s)\n");
+        errx(EXIT_FAILURE, "not valid argument(s)\n");
 
     if(file2 == NULL)
     {
