@@ -65,6 +65,47 @@ char **create_opt(size_t *len, s_token tok)
     return opt;
 }
 
+char **create_files(size_t *len, s_token tok)
+{
+    char **files = malloc(sizeof(char *));
+    char *str = malloc(sizeof(char));
+    str[0] = 0;
+    size_t i_str = 0;
+    size_t i = 0;
+    size_t i_files = 0;
+    while(tok.str[i] != 0)
+    {
+        if (tok.str[i] == ' ')
+        {
+            files = realloc(files, sizeof(char *) * (i_files + 1));
+            files[i_files] = str;
+            str = malloc(sizeof(char));
+            str[0] = 0;
+            i_files++;
+            i_str = 0;
+            i++;
+        }
+        else
+        {
+            str = realloc(str, sizeof(char) * (i_str + 2));
+            str[i_str] = tok.str[i];
+            i_str++;
+            str[i_str] = 0;
+            i++;
+        }
+    }
+    if (i_str != 0)
+    {
+        files = realloc(files, sizeof(char *) * (i_files + 1));
+        files[i_files] = str;
+        i_files++;
+    }
+    /* free(str); */
+    *len = i_files;
+    return files;
+
+}
+
 size_t found_token(s_token_list* tkl, e_token_type type,
         size_t start, size_t end)
 {
@@ -133,15 +174,57 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
 
     size_t len_opt = 0;
-    char **opt = create_opt(&len_opt, ast->left->token);
+    char **opt = NULL;
+    if (ast->left != NULL)
+        opt = create_opt(&len_opt, ast->left->token);
 
 #ifdef DEBUG
     for (size_t i = 0; i < len_opt; i++)
         printf("opt : %s\n", opt[i]);
 #endif
+    if (opt != NULL)
+    {
+        for (size_t i = 0; i < len_opt; i++)
+            free(opt[i]);
+        free(opt);
+    }
+}
+
+void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+
+    size_t len_files = 0;
+    char **files = NULL;
+    if (ast->left != NULL)
+        files = create_files(&len_files, ast->right->token);
+
+    size_t len_opt = 0;
+    char **opt = NULL;
+    if (ast->left != NULL)
+        opt = create_opt(&len_opt, ast->left->token);
+
+#ifdef DEBUG
     for (size_t i = 0; i < len_opt; i++)
-        free(opt[i]);
-    free(opt);
+        printf("opt : %s\n", opt[i]);
+
+    for (size_t i = 0; i < len_files; i++)
+        printf("files : %s\n", files[i]);
+#endif
+    if (files != NULL)
+    {
+        for (size_t i = 0; i < len_files; i++)
+            free(files[i]);
+        free(files);
+    }
+
+    if (opt != NULL)
+    {
+        for (size_t i = 0; i < len_opt; i++)
+            free(opt[i]);
+        free(opt);
+    }
 }
 
 void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
@@ -149,6 +232,10 @@ void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     if (ast->token.token_type == ECHO)
     {
         parse_echo(ast, tkl, current, end);
+    }
+    else if (ast->token.token_type == CAT)
+    {
+        parse_cat(ast, tkl, current, end);
     }
     else
         errx(1, "Not a function :x");
