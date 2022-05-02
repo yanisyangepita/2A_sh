@@ -154,16 +154,10 @@ s_ast *found_type(s_token_list *tkl, size_t *current, size_t end,
         s_token tok = tkl->data[*current];
         tok.token_type = type;
         char *str = concat_tokens(tkl, *current, i);
-        /* s_token *tok = malloc(sizeof(s_token)); */
-        /* if (tok == NULL) */
-        /*     errx(1, "not enough memory to create the token"); */
-        /* create_token(tok, str, type); */
         tok.str = str;
         ast = ast_create(tok);
 
-        /* free(tok); */
         *current = i;
-        /* free(str); */
     }
     return ast;
 }
@@ -197,7 +191,7 @@ void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 
     size_t len_files = 0;
     char **files = NULL;
-    if (ast->left != NULL)
+    if (ast->right != NULL)
         files = create_files(&len_files, ast->right->token);
 
     size_t len_opt = 0;
@@ -227,6 +221,32 @@ void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     }
 }
 
+void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+        errx(EXIT_FAILURE, "cp : does not accept options");
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+
+    size_t len_files = 0;
+    char **files = NULL;
+    if (ast->right != NULL)
+        files = create_files(&len_files, ast->right->token);
+
+    if (len_files < 2)
+        errx(EXIT_FAILURE, "cp need at least 2 parameters");
+#ifdef DEBUG
+    for (size_t i = 0; i < len_files - 1; i++)
+        printf("cp %s into %s\n", files[i], files[len_files - 1]);
+#endif
+    if (files != NULL)
+    {
+        for (size_t i = 0; i < len_files; i++)
+            free(files[i]);
+        free(files);
+    }
+}
+
 void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     if (ast->token.token_type == ECHO)
@@ -236,6 +256,10 @@ void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     else if (ast->token.token_type == CAT)
     {
         parse_cat(ast, tkl, current, end);
+    }
+    else if (ast->token.token_type == CP)
+    {
+        parse_cp(ast, tkl, current, end);
     }
     else
         errx(1, "Not a function :x");
