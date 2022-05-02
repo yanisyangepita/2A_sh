@@ -4,11 +4,10 @@
 #include <string.h>
 
 #include "../include/test_lexer.h"
-#include "../include/cp.h"
+#include "../include/test_command.h"
 
-int main(int argc, char** argv)
+int main()
 {
-    if(argc == 4)
-        cp(argv[2], argv[3]);
+    test_command();
     return 0;
 }

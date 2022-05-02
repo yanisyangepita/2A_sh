@@ -1,5 +1,14 @@
+/* ------------------------------------------------------------------------- */
+/*                             Include File                                  */
+/* ------------------------------------------------------------------------- */
 #include "../include/cp.h"
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : get_file_name                                              */
+/*                                                                           */
+/* Description  : return filename of the path without its directory name     */
+/* ------------------------------------------------------------------------- */
 char* get_file_name(char* path)
 {
     char* file_name = malloc(sizeof(char));
@@ -26,6 +35,17 @@ char* get_file_name(char* path)
     return file_name;
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : cp                                                         */
+/*                                                                           */
+/* Description  : if the source and the dest are valid                       */
+/*                   copy the source content to the dest file                */
+/*                if the source is valid and the dest is a directory name    */
+/*                   create a new file with the same name as source in dest  */
+/*                if the source is not valid                                 */
+/*                   throw an error                                          */
+/* ------------------------------------------------------------------------- */
 void cp(char* source, char* dest)
 {
     FILE* file1 = NULL;

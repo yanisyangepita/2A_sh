@@ -1,5 +1,15 @@
+/* ------------------------------------------------------------------------- */
+/*                             Include File                                  */
+/* ------------------------------------------------------------------------- */
 #include "../include/cat.h"
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : cat                                                        */
+/*                                                                           */
+/* Description  : if the filename is valid, cat its content                  */
+/*                option : e or NULL                                         */
+/* ------------------------------------------------------------------------- */
 void cat(char* filename, char* options)
 {
     FILE* file = NULL;
@@ -10,7 +20,7 @@ void cat(char* filename, char* options)
 
     char c;
     char* end = "";
-    if(options != NULL && !strcmp(options, "-e"))
+    if(options != NULL)
         end = "$";
     while((c = fgetc(file)) != EOF)
     {
