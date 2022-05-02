@@ -247,6 +247,33 @@ void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     }
 }
 
+void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+        errx(EXIT_FAILURE, "cd : does not accept options");
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+
+    size_t len_files = 0;
+    char **files = NULL;
+    if (ast->right != NULL)
+        files = create_files(&len_files, ast->right->token);
+
+
+#ifdef DEBUG
+    if (files != NULL)
+        printf("cd -> %s\n", files[0]);
+    else
+        printf("cd ->  ~\n");
+#endif
+    if (files != NULL)
+    {
+        for (size_t i = 0; i < len_files; i++)
+            free(files[i]);
+        free(files);
+    }
+}
+
 void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     if (ast->token.token_type == ECHO)
@@ -260,6 +287,10 @@ void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     else if (ast->token.token_type == CP)
     {
         parse_cp(ast, tkl, current, end);
+    }
+    else if (ast->token.token_type == CD)
+    {
+        parse_cd(ast, tkl, current, end);
     }
     else
         errx(1, "Not a function :x");
