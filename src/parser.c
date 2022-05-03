@@ -1,5 +1,56 @@
 #include "../include/parser.h"
 
+static s_func reserved_func[46] =
+{
+    {NULL,      NUMBER},
+    {NULL,      STRING},
+    {NULL,  IDENTIFIER},
+    {parse_cd,          CD},
+    {NULL,          LS},
+    {NULL,       MKDIR},
+    {NULL,       TOUCH},
+    {NULL,         PWD},
+    {NULL,          RM},
+    {NULL,          MV},
+    {parse_cp,          CP},
+    {parse_cat,         CAT},
+    {parse_echo,        ECHO},
+    {NULL,          IF},
+    {NULL,        THEN},
+    {NULL,        ELSE},
+    {NULL,        ELIF},
+    {NULL,          FI},
+    {NULL,          DO},
+    {NULL,        DONE},
+    {NULL,        CASE},
+    {NULL,        ESAC},
+    {NULL,       WHILE},
+    {NULL,       UNTIL},
+    {NULL,         FOR},
+    {NULL,      LBRACE},
+    {NULL,      RBRACE},
+    {NULL,        BANG},
+    {NULL,          IN},
+    {NULL,       AND_IF},
+    {NULL,        OR_IF},
+    {NULL,       DSEMI},
+    {NULL,       DLESS},
+    {NULL,      DGREAT},
+    {NULL,     LESSAND},
+    {NULL,    GREATAND},
+    {NULL,   LESSGREAT},
+    {NULL,   DLESSDASH},
+    {NULL,     CLOBBER},
+    {NULL,        PIPE},
+    {NULL,      LPAREN},
+    {NULL,      RPAREN},
+    {NULL,     NEWLINE},
+    {NULL,      DQUOTE},
+    {NULL,      SQUOTE},
+    {NULL,      OPTION}
+};
+
+
 char *str_concat(char* s1, char* s2)
 {
     size_t l1 = strlen(s1);
@@ -276,22 +327,8 @@ void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 
 void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
-    if (ast->token.token_type == ECHO)
-    {
-        parse_echo(ast, tkl, current, end);
-    }
-    else if (ast->token.token_type == CAT)
-    {
-        parse_cat(ast, tkl, current, end);
-    }
-    else if (ast->token.token_type == CP)
-    {
-        parse_cp(ast, tkl, current, end);
-    }
-    else if (ast->token.token_type == CD)
-    {
-        parse_cd(ast, tkl, current, end);
-    }
+    if (reserved_func[ast->token.token_type].func != NULL)
+        reserved_func[ast->token.token_type].func(ast, tkl, current, end);
     else
         errx(1, "Not a function :x");
 }
