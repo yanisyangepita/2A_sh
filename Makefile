@@ -2,8 +2,8 @@
 
 CPPFLAGS = -MMD
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -c -std=c99 -g
-LDFLAGS = -g
+CFLAGS = -Wall -Wextra -Werror -c -std=c99
+LDFLAGS =
 
 SRC = ${wildcard src/*.c}
 HDR = ${wildcard include/*.h}
