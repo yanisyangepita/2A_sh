@@ -131,6 +131,8 @@ void create_token(s_token* token, char* str, e_token_type token_type)
 {
     if(token_type == NEWLINE)
         token->str = "\0";
+    else if(token_type == BACKSLASH)
+        token->str = "\\";
     else
     {
         token->str = malloc(sizeof(char) * (strlen(str) + 1));
@@ -200,7 +202,8 @@ void free_tokens(s_token_list* tokens)
 {
     for(size_t i = 0; i < tokens->token_count; i++)
     {
-        if(i < tokens->token_count - 1)
+        if(i < tokens->token_count - 1
+                && tokens->data[i].token_type != BACKSLASH)
             free(tokens->data[i].str);
     }
 

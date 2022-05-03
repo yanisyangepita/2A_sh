@@ -24,7 +24,7 @@ void lex(s_token_list* tokens, char* source)
     while(1)
     {
         // create the token str until a delimiter
-        while(source[i] != '\0' && source[i] != '\n'
+        while(source[i] != '\0' && source[i] != '\n' && source[i] != '\\'
                 && (source[i] != ' ' || b_is_squote || b_is_dquote)
                 && source[i] != '\t' && !b_break)
         {
@@ -66,8 +66,23 @@ void lex(s_token_list* tokens, char* source)
         lex[lex_index] = '\0';
 
         // End of the source
-        if(lex_index == 0 && source[i] == '\0')
-            break;
+        if(lex_index == 0)
+        {
+            if(source[i] == '\0')
+                break;
+            // BACKSLASH
+            else if (source[i] == '\\')
+            {
+                create_token(&token, "\\", BACKSLASH);
+                add_token(tokens, token);
+
+                lex_index = 0;
+                b_break = 0;
+                i += 1;
+
+                continue;
+            }
+        }
 
         // Skip empty lines and tabs
         if(lex_index == 0 && (source[i] == '\n' || source[i] == '\t'
@@ -78,7 +93,8 @@ void lex(s_token_list* tokens, char* source)
         }
 
         // - STRING
-        if((b_is_squote && lex[0] != '\'') || (b_is_dquote && lex[0] != '\"'))
+        if((b_is_squote && lex[0] != '\'')
+                || (b_is_dquote && lex[0] != '\"'))
             create_token(&token, lex, STRING);
         // OPTION
         else if(lex[0] == '-')
