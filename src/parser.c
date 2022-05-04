@@ -548,6 +548,8 @@ void check_grammar(s_token_list *tkl)
 
 void parse(s_token_list *tkl)
 {
+    if (tkl->data[0].token_type == NEWLINE)
+        return;
     s_ast *prog = ast_create(tkl->data[0]);
     size_t current_index = 0;
     size_t next_prog = 0;
