@@ -6,7 +6,7 @@ static s_func reserved_func[46] =
     {NULL,      STRING},
     {NULL,  IDENTIFIER},
     {parse_cd,          CD},
-    {NULL,          LS},
+    {parse_ls,          LS},
     {NULL,       MKDIR},
     {NULL,       TOUCH},
     {NULL,         PWD},
@@ -438,6 +438,44 @@ void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
         for (size_t i = 0; i < len_files; i++)
             free(files[i]);
         free(files);
+    }
+}
+
+void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+
+    size_t len_opt = 0;
+    char **opt = NULL;
+    if (ast->left != NULL)
+        opt = create_opt(&len_opt, ast->left->token);
+
+    size_t len_files = 0;
+    char **files = NULL;
+    if (ast->right != NULL)
+        files = create_files(&len_files, ast->right->token);
+
+
+#ifdef DEBUG
+    for (size_t i = 0; i < len_opt; i++)
+        printf("opt : %s\n", opt[i]);
+
+    for (size_t i = 0; i < len_files; i++)
+        printf("files : %s\n", files[i]);
+#endif
+    if (files != NULL)
+    {
+        for (size_t i = 0; i < len_files; i++)
+            free(files[i]);
+        free(files);
+    }
+
+    if (opt != NULL)
+    {
+        for (size_t i = 0; i < len_opt; i++)
+            free(opt[i]);
+        free(opt);
     }
 }
 
