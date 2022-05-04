@@ -8,8 +8,8 @@ char* test[4] = {"a", "b", "c", "d"};
 
 void test_command()
 {
-    char* options[] = {"l"};
-    ls("src/", 1, options);
+    char* options[] = {"l", "a"};
+    ls(".", 2, options);
 
     /*
     char* options[] = {"e", "e", "e"};
