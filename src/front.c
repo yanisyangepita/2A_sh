@@ -29,11 +29,10 @@ int front(void)
     char* input = calloc(ARG_MAX, sizeof(char));
 
     printf("2A-SH <%s: %s>$ ",login, wd);
-    scanf("%[^\n]", input);
 
     while(cond)
     {
-        printf("2A-SH <%s: %s>$ ",login, wd);
+        scanf("%[^\n]", input);
 
         //Val shenanigans, IDK what it does
 
@@ -43,7 +42,7 @@ int front(void)
         parse(&tokens);
         free_tokens(&tokens);
 
-        scanf("%[^\n]", input);
+        printf("2A-SH <%s: %s>$ ",login, wd);
     }
 
     free(wd);
