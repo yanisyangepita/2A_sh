@@ -11,6 +11,9 @@
 #include "parser.h"
 #include "lexer.h"
 #include "token.h"
+#include "pwd.h"
+#include "ls.h"
+
 
 int front(void);
 

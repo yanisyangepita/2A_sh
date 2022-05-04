@@ -2,8 +2,10 @@
 
 int front(void)
 {
-    char wd[PATH_MAX];
-    getcwd(wd, PATH_MAX);
+    char *wd;
+    wd = get_wd();
+
+
     printf("\e[H\e[2J\e[3J"); //clean the terminal
 
     puts(
@@ -16,7 +18,7 @@ int front(void)
 "########## ###     ###                            ########  ###    ###       \n"
         );
 
-    sleep(5);
+    sleep(3);
     printf("\e[H\e[2J\e[3J");
     char *login = getlogin();
 
@@ -26,8 +28,8 @@ int front(void)
     int cond = 42;
     char* input = calloc(ARG_MAX, sizeof(char));
 
-    printf("2A-SH / NOT BASH <%s: %s>$ ",login, wd);
-    cond = scanf("%s", input);
+    printf("2A-SH <%s: %s>$ ",login, wd);
+    scanf("%[^\n]", input);
 
     while(cond)
     {
@@ -39,11 +41,11 @@ int front(void)
         parse(&tokens);
         free_tokens(&tokens);
 
-        /* printf("var : %s\n", input); */
-        printf("2A-SH / NOT BASH <%s: %s>$ ",login, wd);
-        cond = scanf("%s", input);
+        printf("2A-SH <%s: %s>$ ",login, wd);
+        scanf("%[^\n]", input);
     }
 
+    free(wd);
     free(input);
     return EXIT_SUCCESS;
 }
