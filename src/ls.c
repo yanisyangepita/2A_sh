@@ -94,8 +94,13 @@ void ls(char* directory, size_t len_options, char** options)
             if(strcmp(directory, "."))
             {
                 char* file_path = malloc(sizeof(char) *
-                        (strlen(directory) + strlen(to_sort[i]) + 1));
+                        (strlen(directory) + strlen(to_sort[i]) + 2));
                 strcpy(file_path, directory);
+                if(directory[strlen(directory) - 1] != '/')
+                {
+                    file_path[strlen(directory)] = '/';
+                    file_path[strlen(directory) + 1] = '\0';
+                }
                 file_path = strcat(file_path, to_sort[i]);
                 if(stat(file_path, &stats))
                     errx(EXIT_FAILURE, "Could not get stats\n");
@@ -106,6 +111,7 @@ void ls(char* directory, size_t len_options, char** options)
                 if(stat(to_sort[i], &stats))
                     errx(EXIT_FAILURE, "Could not get stats\n");
             }
+
 
             total += stats.st_blocks;
         }
@@ -120,8 +126,13 @@ void ls(char* directory, size_t len_options, char** options)
             if(strcmp(directory, "."))
             {
                 char* file_path = malloc(sizeof(char) *
-                        (strlen(directory) + strlen(to_sort[i]) + 1));
+                        (strlen(directory) + strlen(to_sort[i]) + 2));
                 strcpy(file_path, directory);
+                if(directory[strlen(directory) - 1] != '/')
+                {
+                    file_path[strlen(directory)] = '/';
+                    file_path[strlen(directory) + 1] = '\0';
+                }
                 file_path = strcat(file_path, to_sort[i]);
                 if(stat(file_path, &stats))
                     errx(EXIT_FAILURE, "Could not get stats\n");
@@ -211,7 +222,7 @@ void ls(char* directory, size_t len_options, char** options)
                 continue;
 
             // - Add name
-            char* name = malloc(sizeof(char) * (strlen(d->d_name) + 1));
+            char* name = malloc(sizeof(char) * (strlen(d->d_name) + 2));
             strcpy(name, d->d_name);
 
             to_sort = realloc(to_sort,
@@ -233,8 +244,13 @@ void ls(char* directory, size_t len_options, char** options)
             if(strcmp(directory, "."))
             {
                 char* file_path = malloc(sizeof(char) *
-                        (strlen(directory) + strlen(to_sort[i]) + 1));
+                        (strlen(directory) + strlen(to_sort[i]) + 2));
                 strcpy(file_path, directory);
+                if(directory[strlen(directory) - 1] != '/')
+                {
+                    file_path[strlen(directory)] = '/';
+                    file_path[strlen(directory) + 1] = '\0';
+                }
                 file_path = strcat(file_path, to_sort[i]);
                 if(stat(file_path, &stats))
                     errx(EXIT_FAILURE, "Could not get stats\n");
