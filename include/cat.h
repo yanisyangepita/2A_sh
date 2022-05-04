@@ -6,6 +6,6 @@
 #include <stdlib.h>
 #include <err.h>
 
-void cat(char* filename, char* options);
+void cat(char* filename, char** options);
 
 #endif
