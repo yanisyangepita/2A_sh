@@ -6,6 +6,10 @@
 #include <unistd.h>
 #include <err.h>
 #include <stdlib.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <time.h>
 
 int check_option(char* option, size_t len_valid_options, char** valid_options);
 int is_in_options(char* option, size_t len_final_options,

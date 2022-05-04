@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <dirent.h>
 #include <string.h>
+#include <pwd.h>
+#include <grp.h>
 
 #include "../include/pwd.h"
 #include "../include/utils.h"

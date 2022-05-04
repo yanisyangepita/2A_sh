@@ -61,8 +61,87 @@ void ls(char* directory, size_t len_options, char** options)
     // -l
     if(options != NULL && is_in_options("l", len_options, options))
     {
+        size_t len_to_sort = 0;
+        char** to_sort = malloc(sizeof(char*));
 
+        while((d = readdir(dir)) != NULL)
+        {
+            if(!option_a && d->d_name[0] == '.')
+                continue;
+
+            // - Add name
+            char* name = malloc(sizeof(char) * (strlen(d->d_name) + 1));
+            strcpy(name, d->d_name);
+
+            to_sort = realloc(to_sort,
+                    sizeof(char*) * (len_to_sort + 1));
+            to_sort[len_to_sort] = name;
+
+            // - Update len
+            len_to_sort += 1;
+        }
+
+        // sort the name alphabetically
+        ls_sort(len_to_sort, to_sort);
+
+        // Print and free
+        for(size_t i = 0; i < len_to_sort; i++)
+        {
+            // - Get stats
+            struct stat stats;
+            if(stat(to_sort[i], &stats))
+                errx(EXIT_FAILURE, "Could not get stats\n");
+
+            // - data
+            printf((S_ISDIR(stats.st_mode)) ? "d" : "-");
+            printf((stats.st_mode & S_IRUSR) ? "r" : "-");
+            printf((stats.st_mode & S_IWUSR) ? "w" : "-");
+            printf((stats.st_mode & S_IXUSR) ? "x" : "-");
+            printf((stats.st_mode & S_IRGRP) ? "r" : "-");
+            printf((stats.st_mode & S_IWGRP) ? "w" : "-");
+            printf((stats.st_mode & S_IXGRP) ? "x" : "-");
+            printf((stats.st_mode & S_IROTH) ? "r" : "-");
+            printf((stats.st_mode & S_IWOTH) ? "w" : "-");
+            printf((stats.st_mode & S_IXOTH) ? "x " : "- ");
+            printf("%li ", stats.st_nlink);
+
+            // - user data
+            struct passwd* pw = getpwuid(stats.st_uid);
+            if(pw == NULL)
+                errx(EXIT_FAILURE, "Could not get pw uid\n");
+            else
+                printf("%s ", pw->pw_name);
+
+            struct group* gr = getgrgid(stats.st_gid);
+            if(gr == NULL)
+                errx(EXIT_FAILURE, "Could not get gr id");
+            else
+                printf("%s ", gr->gr_name);
+
+            // - file size
+            printf("%5ld ", stats.st_size);
+
+            // - time
+            struct tm* tmp;
+            char str[200];
+            time_t time = stats.st_mtime;
+            tmp = localtime(&time);
+            if(tmp == NULL)
+                errx(EXIT_FAILURE, "Could not get the time\n");
+            strftime(str, sizeof(str), "%b %d %R", tmp);
+            printf("%s ", str);
+
+            // -filename
+            printf("%s ", to_sort[i]);
+            printf("\n");
+
+            free(to_sort[i]);
+        }
+
+        // Free
+        free(to_sort);
     }
+    // ls
     else
     {
         size_t len_to_sort = 0;
@@ -74,22 +153,29 @@ void ls(char* directory, size_t len_options, char** options)
             if(!option_a && d->d_name[0] == '.')
                 continue;
 
+            // - Add name
             char* name = malloc(sizeof(char) * (strlen(d->d_name) + 1));
             strcpy(name, d->d_name);
 
-            to_sort = realloc(to_sort, sizeof(char*) * (len_to_sort + 1));
+            to_sort = realloc(to_sort,
+                    sizeof(char*) * (len_to_sort + 1));
             to_sort[len_to_sort] = name;
+
+            // Update len
             len_to_sort += 1;
         }
 
+        // sort the name alphabetically
         ls_sort(len_to_sort, to_sort);
 
+        // Print and free
         for(size_t i = 0; i < len_to_sort; i++)
         {
             printf("%s ", to_sort[i]);
             free(to_sort[i]);
         }
 
+        // Free
         free(to_sort);
     }
 
