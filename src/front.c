@@ -36,7 +36,8 @@ int front(void)
         input = fgets(buffer, ARG_MAX, stdin);
 
         //Val shenanigans, IDK what it does
-
+        if (input[0] == '\n')
+            printf("bip boop");
         s_token_list tokens;
         create_token_list(&tokens, 1);
         lex(&tokens, input);
