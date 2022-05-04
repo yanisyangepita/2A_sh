@@ -12,6 +12,7 @@ void echo(char* to_echo, char* file)
         }
         else
         {
+            errno = 0;
             // copy the standard input to the standard output.
             printf("%s\n", to_echo);
         }
@@ -27,6 +28,7 @@ void echo(char* to_echo, char* file)
         }
         else
         {
+            errno = 0;
             FILE *filefile;
             filefile = fopen(file, "w");
             if (filefile == NULL)

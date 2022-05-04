@@ -6,6 +6,7 @@
 #include "ls.h"
 #include "cd.h"
 #include "cp.h"
+#include "echo.h"
 #include "err.h"
 #include <errno.h>
 

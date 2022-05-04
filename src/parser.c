@@ -323,6 +323,9 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     param[0] = 0;
     horrible_func(&files, &len_files, &opt_files, &len_opt_files, &param, ast->right->token);
 
+    if (len_files != 0)
+        param[strlen(param) - 1] = 0;
+
     size_t len_opt = 0;
     char **opt = NULL;
     if (ast->left != NULL)
@@ -339,6 +342,31 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
         printf("opt_files : %s\n", opt_files[i]);
     printf("param : %s\n", param);
 #endif
+
+    if (len_files != 0)
+    {
+        for (size_t i = 0; i < len_files; i++)
+        {
+
+            char *to_echo = malloc(sizeof(char) * (strlen(param) + 3));
+            strcpy(to_echo, param);
+            to_echo = strcat(to_echo, "\n");
+            if (strcmp(opt_files[i], ">") == 0)
+            {
+                echo(to_echo, files[i]);
+            }
+            else
+            {
+
+                to_echo = strcat(to_echo, "\n");
+                echo(to_echo, files[i]);
+            }
+            free(to_echo);
+        }
+    }
+    else
+        echo(param, NULL);
+
     if (opt != NULL)
     {
         for (size_t i = 0; i < len_opt; i++)
@@ -375,7 +403,6 @@ void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     char **opt = NULL;
     if (ast->left != NULL)
         opt = create_opt(&len_opt, ast->left->token);
-
 
 #ifdef DEBUG
     for (size_t i = 0; i < len_opt; i++)
