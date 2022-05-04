@@ -177,14 +177,17 @@ char *concat_tokens(s_token_list* tkl, size_t start, size_t end)
     str[0] = 0;
     for (size_t i = start; i < end; i++)
     {
-        if (str[0] != 0 && tkl->data[i - 1].token_type != DQUOTE)
+        if (tkl->data[i].token_type != NONE)
         {
-            size_t len = strlen(str);
-            str = realloc(str, sizeof(char) * (len + 2));
-            str[len] = ' ';
-            str[len + 1] = 0;
+            if (str[0] != 0)
+            {
+                size_t len = strlen(str);
+                str = realloc(str, sizeof(char) * (len + 2));
+                str[len] = ' ';
+                str[len + 1] = 0;
+            }
+            str = str_concat(str, tkl->data[i].str);
         }
-        str = str_concat(str, tkl->data[i].str);
     }
     return str;
 }
@@ -313,8 +316,7 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     size_t len_opt_files = 0;
     char *param = malloc(sizeof(char));
     param[0] = 0;
-    horrible_func(&files, &len_files, &opt_files,
-            &len_opt_files, &param, ast->right->token);
+    horrible_func(&files, &len_files, &opt_files, &len_opt_files, &param, ast->right->token);
 
     size_t len_opt = 0;
     char **opt = NULL;
@@ -447,11 +449,110 @@ void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
         errx(1, "Not a function :x");
 }
 
+void check_grammar(s_token_list *tkl)
+{
+    size_t nbr_dquote = 0;
+    size_t nbr_squote = 0;
+    int matching_par = 0;
+    int matching_bra = 0;
+    for (size_t i = 0; i < tkl->token_count; i++)
+    {
+        if (matching_par < 0)
+            errx(EXIT_FAILURE, ") without (");
+        if (matching_bra < 0)
+            errx(EXIT_FAILURE, "} without {");
+
+        if (tkl->data[i].token_type == DQUOTE)
+        {
+            if (i > 0 && tkl->data[i - 1].token_type == BACKSLASH)
+            {
+                tkl->data[i - 1].token_type = NONE;
+            }
+            else
+            {
+                nbr_dquote++;
+                tkl->data[i].token_type = NONE;
+            }
+        }
+        else if (tkl->data[i].token_type == SQUOTE)
+        {
+            if (i > 0 && tkl->data[i - 1].token_type == BACKSLASH)
+            {
+                tkl->data[i - 1].token_type = NONE;
+            }
+            else
+            {
+                nbr_squote++;;
+                tkl->data[i].token_type = NONE;
+            }
+        }
+        else if (tkl->data[i].token_type == RPAREN)
+        {
+            if (i > 0 && tkl->data[i - 1].token_type == BACKSLASH)
+            {
+                tkl->data[i - 1].token_type = NONE;
+            }
+            else
+            {
+                matching_par--;
+                tkl->data[i].token_type = NONE;
+            }
+        }
+        else if (tkl->data[i].token_type == LPAREN)
+        {
+            if (i > 0 && tkl->data[i - 1].token_type == BACKSLASH)
+            {
+                tkl->data[i - 1].token_type = NONE;
+            }
+            else
+            {
+                matching_par++;
+                tkl->data[i].token_type = NONE;
+            }
+        }
+        else if (tkl->data[i].token_type == RBRACE)
+        {
+            if (i > 0 && tkl->data[i - 1].token_type == BACKSLASH)
+            {
+                tkl->data[i - 1].token_type = NONE;
+            }
+            else
+            {
+                matching_bra--;
+                tkl->data[i].token_type = NONE;
+            }
+        }
+        else if (tkl->data[i].token_type == LBRACE)
+        {
+            if (i > 0 && tkl->data[i - 1].token_type == BACKSLASH)
+            {
+                tkl->data[i - 1].token_type = NONE;
+            }
+            else
+            {
+                matching_bra++;
+                tkl->data[i].token_type = NONE;
+            }
+        }
+
+    }
+    if (nbr_dquote % 2 == 1)
+        errx(EXIT_FAILURE, "Expecting another \"");
+    if (nbr_squote % 2 == 1)
+        errx(EXIT_FAILURE, "Expecting another \'");
+    if (matching_par != 0)
+        errx(EXIT_FAILURE, "parenthesis not matching");
+    if (matching_bra != 0)
+        errx(EXIT_FAILURE, "braces not matching");
+}
+
 void parse(s_token_list *tkl)
 {
     s_ast *prog = ast_create(tkl->data[0]);
     size_t current_index = 0;
     size_t next_prog = 0;
+
+    check_grammar(tkl);
 
     while (next_prog != tkl->token_count
             && tkl->data[next_prog].token_type != NEWLINE)
