@@ -509,7 +509,7 @@ void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     char **valid_options = NULL;
     if (ast->left != NULL)
     {
-        valid_options = get_options(len_opt, opt, 1, options_ls, &len_valid);
+        valid_options = get_options(len_opt, opt, 2, options_ls, &len_valid);
         if (valid_options == NULL)
         {
             errno = E_INVALID_OPTION;
@@ -517,7 +517,7 @@ void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
         }
     }
 
-    if (files == NULL)
+    if (files != NULL)
     {
         for (size_t i = 0; i < len_files; i++)
             ls(files[i], len_valid, opt);
