@@ -442,6 +442,10 @@ void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     for (size_t i = 0; i < len_files - 1; i++)
         printf("cp %s into %s\n", files[i], files[len_files - 1]);
 #endif
+
+    for (size_t i = 0; i < len_files - 1; i++)
+        cp(files[i], files[len_files - 1]);
+
     if (files != NULL)
     {
         for (size_t i = 0; i < len_files; i++)
