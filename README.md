@@ -2,7 +2,7 @@
 
 ## Téléchargement du projet
 
-- Allez sur le site de notre projet: [link](<link>)
+- Allez sur le [site de notre projet](https://withered-wave-5039.bss.design/)
 - Allez sur la page de telechargement du projet
 - Appuyez sur `Télecharger le projet`
 
