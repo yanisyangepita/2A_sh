@@ -1,4 +1,9 @@
 #include "../include/parser.h"
+#include "../include/utils.h"
+
+char* options_ls[2] = {"a", "l"};
+char* options_cat[1] = {"e"};
+char* options_echo[1] = {"<<"};
 
 static s_func reserved_func[46] =
 {
@@ -366,6 +371,7 @@ void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     if (ast->left != NULL)
         opt = create_opt(&len_opt, ast->left->token);
 
+
 #ifdef DEBUG
     for (size_t i = 0; i < len_opt; i++)
         printf("opt : %s\n", opt[i]);
@@ -373,6 +379,19 @@ void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     for (size_t i = 0; i < len_files; i++)
         printf("files : %s\n", files[i]);
 #endif
+
+    size_t len_valid = 0;
+    char **valid_options = NULL;
+    if (ast->left != NULL)
+    {
+        valid_options = get_options(len_opt, opt, 1, options_cat, &len_valid);
+        if (valid_options == NULL)
+            errx(EXIT_FAILURE, "invalid option");
+    }
+
+    for (size_t i = 0; i < len_files; i++)
+        cat(files[i], valid_options);
+
     if (files != NULL)
     {
         for (size_t i = 0; i < len_files; i++)
@@ -386,6 +405,9 @@ void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
             free(opt[i]);
         free(opt);
     }
+
+    if (valid_options != NULL)
+        free(valid_options);
 }
 
 void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
