@@ -10,7 +10,7 @@
 /* Description  : if the filename is valid, cat its content                  */
 /*                option : e or NULL                                         */
 /* ------------------------------------------------------------------------- */
-void cat(char* filename, char* options)
+void cat(char* filename, char** options)
 {
     FILE* file = NULL;
     file = fopen(filename, "r");

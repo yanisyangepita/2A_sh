@@ -85,12 +85,53 @@ void ls(char* directory, size_t len_options, char** options)
         ls_sort(len_to_sort, to_sort);
 
         // Print and free
+        // - total
+        size_t total = 0;
         for(size_t i = 0; i < len_to_sort; i++)
         {
             // - Get stats
             struct stat stats;
-            if(stat(to_sort[i], &stats))
-                errx(EXIT_FAILURE, "Could not get stats\n");
+            if(strcmp(directory, "."))
+            {
+                char* file_path = malloc(sizeof(char) *
+                        (strlen(directory) + strlen(to_sort[i]) + 1));
+                strcpy(file_path, directory);
+                file_path = strcat(file_path, to_sort[i]);
+                if(stat(file_path, &stats))
+                    errx(EXIT_FAILURE, "Could not get stats\n");
+                free(file_path);
+            }
+            else
+            {
+                if(stat(to_sort[i], &stats))
+                    errx(EXIT_FAILURE, "Could not get stats\n");
+            }
+
+            total += stats.st_blocks;
+        }
+
+        printf("total %zu\n", total / 2);
+
+        // - result
+        for(size_t i = 0; i < len_to_sort; i++)
+        {
+            // - Get stats
+            struct stat stats;
+            if(strcmp(directory, "."))
+            {
+                char* file_path = malloc(sizeof(char) *
+                        (strlen(directory) + strlen(to_sort[i]) + 1));
+                strcpy(file_path, directory);
+                file_path = strcat(file_path, to_sort[i]);
+                if(stat(file_path, &stats))
+                    errx(EXIT_FAILURE, "Could not get stats\n");
+                free(file_path);
+            }
+            else
+            {
+                if(stat(to_sort[i], &stats))
+                    errx(EXIT_FAILURE, "Could not get stats\n");
+            }
 
             // - data
             printf((S_ISDIR(stats.st_mode)) ? "d" : "-");
