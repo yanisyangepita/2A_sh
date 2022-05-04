@@ -27,12 +27,13 @@ int front(void)
 
     int cond = 42;
     char* input = calloc(ARG_MAX, sizeof(char));
+    char* buffer = calloc(ARG_MAX, sizeof(char));
 
     printf("2A-SH <%s: %s>$ ",login, wd);
 
     while(cond)
     {
-        scanf("%[^\n]", input);
+        input = fgets(buffer, ARG_MAX, stdin);
 
         //Val shenanigans, IDK what it does
 
@@ -47,5 +48,6 @@ int front(void)
 
     free(wd);
     free(input);
+    free(buffer);
     return EXIT_SUCCESS;
 }
