@@ -17,17 +17,8 @@ int check_option(char* option, size_t len_valid_options, char** valid_options)
     for(size_t i = 0; i < len_valid_options; i++)
     {
         if(!strcmp(valid_options[i], option))
-        {
-#ifdef DEBUG
-            printf("-%s is a valid option\n", option);
-#endif
             return 1;
-        }
     }
-
-#ifdef DEBUG
-    printf("-%s is not a valid option\n", option);
-#endif
 
     return 0;
 }
@@ -47,17 +38,8 @@ int is_in_options(char* option, size_t len_final_options,
     for(size_t i = 0; i < len_final_options; i++)
     {
         if(!strcmp(final_options[i], option))
-        {
-#ifdef DEBUG
-            printf("-%s is already in the final_options list\n", option);
-#endif
             return 1;
-        }
     }
-
-#ifdef DEBUG
-    printf("-%s is not already in the final_options list\n", option);
-#endif
 
     return 0;
 }
@@ -107,4 +89,26 @@ char** get_options(size_t len_opt, char** options,
     *len_final = len_final_options;
     // return the final_options list
     return final_options;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : ls_sort                                                    */
+/*                                                                           */
+/* Description  : sort the result of ls                                      */
+/* ------------------------------------------------------------------------- */
+void ls_sort(size_t len_to_sort, char** to_sort)
+{
+    for(size_t i = 0; i < len_to_sort - 1; i++)
+    {
+        for(size_t j = i + 1; j < len_to_sort; j++)
+        {
+            if(strcmp(to_sort[i], to_sort[j]) > 0)
+            {
+                char* tmp = to_sort[i];
+                to_sort[i] = to_sort[j];
+                to_sort[j] = tmp;
+            }
+        }
+    }
 }

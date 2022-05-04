@@ -1,4 +1,5 @@
 #include "../include/test_command.h"
+#include "../include/ls.h"
 
 char* options_ls[2] = {"a", "l"};
 char* options_cat[1] = {"e"};
@@ -7,6 +8,11 @@ char* test[4] = {"a", "b", "c", "d"};
 
 void test_command()
 {
+    char* options[] = {"a", "l"};
+    printf("ls -l -a\n");
+    ls(".", 2, options);
+
+    /*
     char* options[] = {"e", "e", "e"};
     size_t len_final_options;
     char** final_options = get_options(3, options, 1, options_cat,
@@ -22,4 +28,5 @@ void test_command()
 
         free(final_options);
     }
+    */
 }
