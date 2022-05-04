@@ -4,6 +4,7 @@
 #include "ast.h"
 #include "cat.h"
 #include "ls.h"
+#include "cd.h"
 #include "err.h"
 #include <errno.h>
 

@@ -1,5 +1,5 @@
-#ifndef _2ASH_CAT_H
-#define _2ASH_CAT_H
+#ifndef _2ASH_CD_H
+#define _2ASH_CD_H
 
 #include <unistd.h>
 #include <stdio.h>

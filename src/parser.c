@@ -472,6 +472,25 @@ void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     else
         printf("cd ->  ~\n");
 #endif
+
+    if (files != NULL)
+        cd(files[0]);
+    else
+    {
+        char *login = getlogin();
+        char *path = malloc(sizeof(char) * (7 + strlen(login)));
+        path[0] = '/';
+        path[1] = 'h';
+        path[2] = 'o';
+        path[3] = 'm';
+        path[4] = 'e';
+        path[5] = '/';
+        path[6] = 0;
+        path = strcat(path, login);
+        printf("%s\n", path);
+        cd(path);
+    }
+
     if (files != NULL)
     {
         for (size_t i = 0; i < len_files; i++)
