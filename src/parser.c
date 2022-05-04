@@ -177,7 +177,7 @@ char *concat_tokens(s_token_list* tkl, size_t start, size_t end)
     str[0] = 0;
     for (size_t i = start; i < end; i++)
     {
-        if (str[0] != 0)
+        if (str[0] != 0 && tkl->data[i - 1].token_type != DQUOTE)
         {
             size_t len = strlen(str);
             str = realloc(str, sizeof(char) * (len + 2));

@@ -35,7 +35,7 @@ typedef enum
     CLOBBER,
 
     // Other
-    PIPE, LPAREN, RPAREN, NEWLINE, SQUOTE, DQUOTE, OPTION, BACKSLASH
+    PIPE, LPAREN, RPAREN, NEWLINE, SQUOTE, DQUOTE, OPTION, BACKSLASH, NONE
 } e_token_type;
 
 typedef struct
