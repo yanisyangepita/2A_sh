@@ -33,6 +33,8 @@ int front(void)
 
     while(cond)
     {
+        printf("2A-SH <%s: %s>$ ",login, wd);
+
         //Val shenanigans, IDK what it does
 
         s_token_list tokens;
@@ -41,7 +43,6 @@ int front(void)
         parse(&tokens);
         free_tokens(&tokens);
 
-        printf("2A-SH <%s: %s>$ ",login, wd);
         scanf("%[^\n]", input);
     }
 
