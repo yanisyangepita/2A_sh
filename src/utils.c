@@ -93,6 +93,30 @@ char** get_options(size_t len_opt, char** options,
 
 
 /* ------------------------------------------------------------------------- */
+/* Function     : lower                                                      */
+/*                                                                           */
+/* Description  : return str in lower case                                   */
+/* ------------------------------------------------------------------------- */
+char* lower(char* str)
+{
+    char* res = malloc(sizeof(char) * (strlen(str) + 1));
+    size_t i = 0;
+    while(*str != '\0')
+    {
+        if(*str >= 'A' && *str <= 'Z')
+            res[i] = (*str) - 'A' + 'a';
+        else
+            res[i] = *str;
+        str++;
+        i++;
+    }
+    res[i] = '\0';
+
+    return res;
+}
+
+
+/* ------------------------------------------------------------------------- */
 /* Function     : ls_sort                                                    */
 /*                                                                           */
 /* Description  : sort the result of ls                                      */
@@ -103,11 +127,38 @@ void ls_sort(size_t len_to_sort, char** to_sort)
     {
         for(size_t j = i + 1; j < len_to_sort; j++)
         {
-            if(strcmp(to_sort[i], to_sort[j]) > 0)
+            if(!strcmp(to_sort[i], "2Ash"))
             {
-                char* tmp = to_sort[i];
-                to_sort[i] = to_sort[j];
-                to_sort[j] = tmp;
+                if(strcmp("./2Ash", to_sort[j]) > 0)
+                {
+                    char* tmp = to_sort[i];
+                    to_sort[i] = to_sort[j];
+                    to_sort[j] = tmp;
+                }
+            }
+            else if(!strcmp(to_sort[j], "2Ash"))
+            {
+                if(strcmp(to_sort[i], "./2Ash") > 0)
+                {
+                    char* tmp = to_sort[i];
+                    to_sort[i] = to_sort[j];
+                    to_sort[j] = tmp;
+                }
+            }
+            else
+            {
+                char* stri = lower(to_sort[i]);
+                char* strj = lower(to_sort[j]);
+
+                if(strcmp(stri, strj) > 0)
+                {
+                    char* tmp = to_sort[i];
+                    to_sort[i] = to_sort[j];
+                    to_sort[j] = tmp;
+                }
+
+                free(stri);
+                free(strj);
             }
         }
     }

@@ -159,7 +159,7 @@ void ls(char* directory, size_t len_options, char** options)
             else
                 printf("%s ", gr->gr_name);
 
-            // - file size
+            // - size
             printf("%5ld ", stats.st_size);
 
             // - time
@@ -172,8 +172,24 @@ void ls(char* directory, size_t len_options, char** options)
             strftime(str, sizeof(str), "%b %d %R", tmp);
             printf("%s ", str);
 
-            // -filename
-            printf("%s ", to_sort[i]);
+            // - directory
+            if(S_ISDIR(stats.st_mode))
+            {
+                printf("\033[1;32m");
+                printf("%s ", to_sort[i]);
+                printf("\033[0m");
+            }
+            // - executable
+            else if(stats.st_mode & S_IXUSR)
+            {
+                printf("\033[1;36m");
+                printf("%s ", to_sort[i]);
+                printf("\033[0m");
+            }
+            // - file
+            else
+                printf("%s ", to_sort[i]);
+
             printf("\n");
 
             free(to_sort[i]);
@@ -212,7 +228,42 @@ void ls(char* directory, size_t len_options, char** options)
         // Print and free
         for(size_t i = 0; i < len_to_sort; i++)
         {
-            printf("%s ", to_sort[i]);
+            // - Get stats
+            struct stat stats;
+            if(strcmp(directory, "."))
+            {
+                char* file_path = malloc(sizeof(char) *
+                        (strlen(directory) + strlen(to_sort[i]) + 1));
+                strcpy(file_path, directory);
+                file_path = strcat(file_path, to_sort[i]);
+                if(stat(file_path, &stats))
+                    errx(EXIT_FAILURE, "Could not get stats\n");
+                free(file_path);
+            }
+            else
+            {
+                if(stat(to_sort[i], &stats))
+                    errx(EXIT_FAILURE, "Could not get stats\n");
+            }
+
+            // - directory
+            if(S_ISDIR(stats.st_mode))
+            {
+                printf("\033[1;32m");
+                printf("%s  ", to_sort[i]);
+                printf("\033[0m");
+            }
+            // - executable
+            else if(stats.st_mode & S_IXUSR)
+            {
+                printf("\033[1;36m");
+                printf("%s  ", to_sort[i]);
+                printf("\033[0m");
+            }
+            // - file
+            else
+                printf("%s  ", to_sort[i]);
+
             free(to_sort[i]);
         }
 

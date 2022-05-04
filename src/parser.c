@@ -503,6 +503,28 @@ void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     for (size_t i = 0; i < len_files; i++)
         printf("files : %s\n", files[i]);
 #endif
+
+
+    size_t len_valid = 0;
+    char **valid_options = NULL;
+    if (ast->left != NULL)
+    {
+        valid_options = get_options(len_opt, opt, 1, options_ls, &len_valid);
+        if (valid_options == NULL)
+        {
+            errno = E_INVALID_OPTION;
+            return;
+        }
+    }
+
+    if (files == NULL)
+    {
+        for (size_t i = 0; i < len_files; i++)
+            ls(files[i], len_valid, opt);
+    }
+    else
+        ls(NULL, len_valid, opt);
+
     if (files != NULL)
     {
         for (size_t i = 0; i < len_files; i++)
@@ -516,6 +538,9 @@ void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
             free(opt[i]);
         free(opt);
     }
+
+    if (valid_options != NULL)
+        free(valid_options);
 }
 
 void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)

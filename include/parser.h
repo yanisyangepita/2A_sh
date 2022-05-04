@@ -3,6 +3,7 @@
 
 #include "ast.h"
 #include "cat.h"
+#include "ls.h"
 #include "err.h"
 #include <errno.h>
 
