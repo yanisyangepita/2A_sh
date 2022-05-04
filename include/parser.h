@@ -3,6 +3,8 @@
 
 #include "ast.h"
 #include "cat.h"
+#include "err.h"
+#include <errno.h>
 
 typedef void(*func)(s_ast *ast, s_token_list *tkl, size_t cur, size_t end);
 

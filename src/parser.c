@@ -7,40 +7,40 @@ char* options_echo[1] = {"<<"};
 
 static s_func reserved_func[46] =
 {
-    {NULL,      NUMBER},
-    {NULL,      STRING},
-    {NULL,  IDENTIFIER},
-    {parse_cd,          CD},
-    {parse_ls,          LS},
-    {NULL,       MKDIR},
-    {NULL,       TOUCH},
-    {NULL,         PWD},
+    {NULL,          NUMBER},
+    {NULL,          STRING},
+    {NULL,          IDENTIFIER},
+    {parse_cd,      CD},
+    {parse_ls,      LS},
+    {NULL,          MKDIR},
+    {NULL,          TOUCH},
+    {NULL,          PWD},
     {NULL,          RM},
     {NULL,          MV},
-    {parse_cp,          CP},
-    {parse_cat,         CAT},
-    {parse_echo,        ECHO},
+    {parse_cp,      CP},
+    {parse_cat,     CAT},
+    {parse_echo,    ECHO},
     {NULL,          IF},
-    {NULL,        THEN},
-    {NULL,        ELSE},
-    {NULL,        ELIF},
+    {NULL,          THEN},
+    {NULL,          ELSE},
+    {NULL,          ELIF},
     {NULL,          FI},
     {NULL,          DO},
-    {NULL,        DONE},
-    {NULL,        CASE},
-    {NULL,        ESAC},
-    {NULL,       WHILE},
-    {NULL,       UNTIL},
-    {NULL,         FOR},
-    {NULL,      LBRACE},
-    {NULL,      RBRACE},
-    {NULL,        BANG},
+    {NULL,          DONE},
+    {NULL,          CASE},
+    {NULL,          ESAC},
+    {NULL,          WHILE},
+    {NULL,          UNTIL},
+    {NULL,          FOR},
+    {NULL,          LBRACE},
+    {NULL,          RBRACE},
+    {NULL,          BANG},
     {NULL,          IN},
-    {NULL,       AND_IF},
-    {NULL,        OR_IF},
-    {NULL,       DSEMI},
-    {NULL,       DLESS},
-    {NULL,      DGREAT},
+    {NULL,          AND_IF},
+    {NULL,          OR_IF},
+    {NULL,          DSEMI},
+    {NULL,          DLESS},
+    {NULL,          DGREAT},
     {NULL,     LESSAND},
     {NULL,    GREATAND},
     {NULL,   LESSGREAT},
@@ -360,6 +360,11 @@ void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     ast->left = found_type(tkl, &current, end, OPTION);
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
+    if (ast->right == NULL)
+    {
+        errno = E_NEED_PARAMETERS;
+        return;
+    }
 
     size_t len_files = 0;
     char **files = NULL;
@@ -386,7 +391,10 @@ void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     {
         valid_options = get_options(len_opt, opt, 1, options_cat, &len_valid);
         if (valid_options == NULL)
-            errx(EXIT_FAILURE, "invalid option");
+        {
+            errno = E_INVALID_OPTION;
+            return;
+        }
     }
 
     for (size_t i = 0; i < len_files; i++)
@@ -414,7 +422,10 @@ void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     ast->left = found_type(tkl, &current, end, OPTION);
     if (ast->left != NULL)
-        errx(EXIT_FAILURE, "cp : does not accept options");
+    {
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
 
     size_t len_files = 0;
@@ -423,7 +434,10 @@ void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
         files = create_files(&len_files, ast->right->token);
 
     if (len_files < 2)
-        errx(EXIT_FAILURE, "cp need at least 2 parameters");
+    {
+        errno = E_NEED2_PARAMETERS;
+        return;
+    }
 #ifdef DEBUG
     for (size_t i = 0; i < len_files - 1; i++)
         printf("cp %s into %s\n", files[i], files[len_files - 1]);
@@ -440,7 +454,10 @@ void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     ast->left = found_type(tkl, &current, end, OPTION);
     if (ast->left != NULL)
-        errx(EXIT_FAILURE, "cd : does not accept options");
+    {
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
 
     size_t len_files = 0;
@@ -504,9 +521,16 @@ void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     if (reserved_func[ast->token.token_type].func != NULL)
+    {
         reserved_func[ast->token.token_type].func(ast, tkl, current, end);
+        if (errno != 0)
+            return;
+    }
     else
-        errx(1, "Not a function :x");
+    {
+        errno = E_INVALID_FUNCTION;
+        return;
+    }
 }
 
 void check_grammar(s_token_list *tkl)
@@ -518,9 +542,15 @@ void check_grammar(s_token_list *tkl)
     for (size_t i = 0; i < tkl->token_count; i++)
     {
         if (matching_par < 0)
-            errx(EXIT_FAILURE, ") without (");
+        {
+            errno = E_GRAMMAR_LPAR;
+            return;
+        }
         if (matching_bra < 0)
-            errx(EXIT_FAILURE, "} without {");
+        {
+            errno = E_GRAMMAR_LBRA;
+            return;
+        }
 
         if (tkl->data[i].token_type == DQUOTE)
         {
@@ -597,13 +627,13 @@ void check_grammar(s_token_list *tkl)
 
     }
     if (nbr_dquote % 2 == 1)
-        errx(EXIT_FAILURE, "Expecting another \"");
-    if (nbr_squote % 2 == 1)
-        errx(EXIT_FAILURE, "Expecting another \'");
-    if (matching_par != 0)
-        errx(EXIT_FAILURE, "parenthesis not matching");
-    if (matching_bra != 0)
-        errx(EXIT_FAILURE, "braces not matching");
+        errno = E_GRAMMAR_DQUOTE;
+    else if (nbr_squote % 2 == 1)
+        errno = E_GRAMMAR_SQUOTE;
+    else if (matching_par != 0)
+        errno = E_GRAMMAR_PAR;
+    else if (matching_bra != 0)
+        errno = E_GRAMMAR_BRA;
 }
 
 void parse(s_token_list *tkl)
@@ -615,6 +645,8 @@ void parse(s_token_list *tkl)
     size_t next_prog = 0;
 
     check_grammar(tkl);
+    if (errno != 0)
+        return;
 
     while (next_prog != tkl->token_count
             && tkl->data[next_prog].token_type != NEWLINE)
@@ -624,6 +656,8 @@ void parse(s_token_list *tkl)
 
         next_prog = found_token(tkl, PIPE, current_index, tkl->token_count);
         found_func(prog, tkl, current_index, next_prog);
+        if (errno != 0)
+            return;
     }
 
 #ifdef DEBUG
