@@ -6,8 +6,8 @@
 #include "../include/test_lexer.h"
 #include "../include/test_command.h"
 
-int main(int argc, char** argv)
+int main()
 {
-    test_lexer(argc, argv);
+    test_command();
     return 0;
 }

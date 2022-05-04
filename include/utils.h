@@ -12,5 +12,6 @@ int is_in_options(char* option, size_t len_final_options,
         char** final_options);
 char** get_options(size_t len_opt, char** options, size_t len_valid_options,
         char** valid_options, size_t* len_final);
+void ls_sort(size_t len_to_sort, char** to_sort);
 
 #endif
