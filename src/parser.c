@@ -520,7 +520,13 @@ void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     if (files != NULL)
     {
         for (size_t i = 0; i < len_files; i++)
+        {
+            if (len_files >= 2)
+                printf("%s:\n", files[i]);
             ls(files[i], len_valid, opt);
+            if (len_files > 1 && i != len_files - 1)
+                printf("\n");
+        }
     }
     else
         ls(NULL, len_valid, opt);
