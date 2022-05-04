@@ -14,7 +14,7 @@ static s_func reserved_func[46] =
     {parse_ls,      LS},
     {NULL,          MKDIR},
     {NULL,          TOUCH},
-    {NULL,          PWD},
+    {parse_pwd,          PWD},
     {NULL,          RM},
     {NULL,          MV},
     {parse_cp,      CP},
@@ -308,6 +308,24 @@ void horrible_func(char ***tab_files, size_t *len_files,
     *tab_opt_files = opt_files;
     *tab_files = files;
     free(str);
+}
+
+void parse_pwd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+    {
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+    if (ast->right != NULL)
+    {
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
+    pwd();
+    printf("\n");
 }
 
 void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)

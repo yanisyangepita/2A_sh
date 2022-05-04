@@ -7,6 +7,7 @@
 #include "cd.h"
 #include "cp.h"
 #include "echo.h"
+#include "pwd.h"
 #include "err.h"
 #include <errno.h>
 
@@ -43,6 +44,9 @@ void parse_ls(s_ast *ast, s_token_list *tkl,
         size_t current, size_t end);
 
 void parse_echo(s_ast *ast, s_token_list *tkl,
+        size_t current, size_t end);
+
+void parse_pwd(s_ast *ast, s_token_list *tkl,
         size_t current, size_t end);
 
 void parse(s_token_list* tkl);
