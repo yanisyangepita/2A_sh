@@ -1,16 +1,28 @@
+/* ------------------------------------------------------------------------- */
+/*                             Include File                                  */
+/* ------------------------------------------------------------------------- */
 #include "../include/cat.h"
 
-void cat(char* filename, char* options)
+
+/* ------------------------------------------------------------------------- */
+/* Function     : cat                                                        */
+/*                                                                           */
+/* Description  : if the filename is valid, cat its content                  */
+/*                option : e or NULL                                         */
+/* ------------------------------------------------------------------------- */
+void cat(char* filename, char** options)
 {
     FILE* file = NULL;
     file = fopen(filename, "r");
 
     if(file == NULL)
-        errx(EXIT_FAILURE, "Could not open the file\n");
-
+    {
+        errno = E_INVALID_FILE;
+        return;
+    }
     char c;
     char* end = "";
-    if(options != NULL && !strcmp(options, "-e"))
+    if(options != NULL)
         end = "$";
     while((c = fgetc(file)) != EOF)
     {

@@ -1,6 +1,7 @@
-#ifndef _2ASH_CAT_H
-#define _2ASH_CAT_H
+#ifndef _2ASH_CD_H
+#define _2ASH_CD_H
 
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -8,6 +9,6 @@
 
 #include "err.h"
 
-void cat(char* filename, char** options);
+void cd(char* path);
 
 #endif

@@ -5,6 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <err.h>
+#include <stdlib.h>
 
 void pwd();
 char* get_wd();

@@ -1,5 +1,14 @@
+/* ------------------------------------------------------------------------- */
+/*                             Include File                                  */
+/* ------------------------------------------------------------------------- */
 #include "../include/token.h"
 
+/* ------------------------------------------------------------------------- */
+/* STATIC VARIABLE                                                           */
+/* Type         : s_token                                                    */
+/* Name         : reserved_words                                             */
+/* Description  : database of the reserved_words                             */
+/* ------------------------------------------------------------------------- */
 static s_token reserved_words[NB_RESERVED] =
 {
     {"cd",    CD},
@@ -46,6 +55,15 @@ static s_token reserved_words[NB_RESERVED] =
     {">|",    CLOBBER}
 };
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : check_reserved                                             */
+/*                                                                           */
+/* Description  : if the string is in the database                           */
+/*                   return the corresponding token_type                     */
+/*                else                                                       */
+/*                   return the IDENTIFIER token_type                        */
+/* ------------------------------------------------------------------------- */
 e_token_type check_reserved(char* str)
 {
     for(size_t i = 0; i < NB_RESERVED; i++)
@@ -62,6 +80,15 @@ e_token_type check_reserved(char* str)
     }
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : check_number                                               */
+/*                                                                           */
+/* Description  : if the string is a number                                  */
+/*                   return the NUMBER token_type                            */
+/*                else                                                       */
+/*                   return the IDENTIFIER token_type                        */
+/* ------------------------------------------------------------------------- */
 e_token_type check_number(char* str)
 {
     char* p = str;
@@ -76,6 +103,13 @@ e_token_type check_number(char* str)
     return NUMBER;
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : search_token                                               */
+/*                                                                           */
+/* Description  : search the right token_type                                */
+/*                assign the value of the attributes of the token            */
+/* ------------------------------------------------------------------------- */
 void search_token(s_token* token, char* str, e_token_type token_type)
 {
     if(token_type == NUMBER)
@@ -87,10 +121,18 @@ void search_token(s_token* token, char* str, e_token_type token_type)
     token->token_type = token_type;
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : create_token                                               */
+/*                                                                           */
+/* Description  : assign the value of the attributes of the token            */
+/* ------------------------------------------------------------------------- */
 void create_token(s_token* token, char* str, e_token_type token_type)
 {
     if(token_type == NEWLINE)
         token->str = "\0";
+    else if(token_type == BACKSLASH)
+        token->str = "\\";
     else
     {
         token->str = malloc(sizeof(char) * (strlen(str) + 1));
@@ -99,6 +141,13 @@ void create_token(s_token* token, char* str, e_token_type token_type)
     token->token_type = token_type;
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : create_token_list                                          */
+/*                                                                           */
+/* Description  : initialize and assign the value of the attributes of the   */
+/*                token_list                                                 */
+/* ------------------------------------------------------------------------- */
 void create_token_list(s_token_list* tokens, size_t list_size)
 {
     tokens->data = (s_token*) malloc(sizeof(s_token) * list_size);
@@ -106,6 +155,12 @@ void create_token_list(s_token_list* tokens, size_t list_size)
     tokens->list_size = list_size;
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : add_token                                                  */
+/*                                                                           */
+/* Description  : add the token to the token_list                            */
+/* ------------------------------------------------------------------------- */
 void add_token(s_token_list* tokens, s_token token)
 {
     if(tokens->token_count >= tokens->list_size)
@@ -126,18 +181,30 @@ void add_token(s_token_list* tokens, s_token token)
     tokens->token_count += 1;
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : get_token                                                  */
+/*                                                                           */
+/* Description  : get the token of the token_list at the index               */
+/* ------------------------------------------------------------------------- */
 s_token* get_token(s_token_list* tokens, size_t index)
 {
     return &tokens->data[index];
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : free_tokens                                                */
+/*                                                                           */
+/* Description  : free the token_list                                        */
+/* ------------------------------------------------------------------------- */
 void free_tokens(s_token_list* tokens)
 {
-    for(size_t i = 0; i < tokens->token_count; i++)
+    for (size_t i = 0; i < tokens->token_count; i++)
     {
-        if(i < tokens->token_count - 1)
+        if (tokens->data[i].token_type == NONE &&
+                tokens->data[i].str[0] != '\\')
             free(tokens->data[i].str);
     }
-
     free(tokens->data);
 }

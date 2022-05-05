@@ -3,11 +3,14 @@
 #include <err.h>
 #include <string.h>
 
-#include "../include/test_lexer.h"
-#include "../include/pwd.h"
-
-int main()
+#include "../include/front.h"
+#include "../include/token.h"
+int main(/* int argc, char** argv */)
 {
-    pwd();
-    return 0;
+    front();
+   /*  s_token_list tokens; */
+    /* create_token_list(&tokens, 1); */
+    /* lex(&tokens, string); */
+    /* free_tokens(&tokens); */
+    /* return 0; */
 }
