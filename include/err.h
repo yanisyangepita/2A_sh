@@ -18,5 +18,11 @@ typedef struct s_err
 #define E_NEED2_PARAMETERS 9
 #define E_INVALID_OPTION 10
 #define E_NEED_PARAMETERS 11
+#define E_NACCEPT_PARAMETERS 12
+#define E_INVALID_FILE 13
+#define E_INVALID_DIR 14
+#define E_INVALID_STAT 15
+#define E_INVALID_UID 16
+#define E_INVALID_TIME 17
 
 #endif

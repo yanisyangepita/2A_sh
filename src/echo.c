@@ -32,7 +32,10 @@ void echo(char* to_echo, char* file)
             FILE *filefile;
             filefile = fopen(file, "w");
             if (filefile == NULL)
-                errx(EXIT_FAILURE, "file opening error");
+            {
+                errno = E_INVALID_FILE;
+                return;
+            }
 
             fputs(to_echo, filefile);
             fclose(filefile);

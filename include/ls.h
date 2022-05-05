@@ -3,15 +3,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <err.h>
 #include <errno.h>
 #include <dirent.h>
 #include <string.h>
 #include <pwd.h>
 #include <grp.h>
 
-#include "../include/pwd.h"
-#include "../include/utils.h"
+#include "pwd.h"
+#include "utils.h"
+#include "err.h"
 
 
 void ls(char* directory, size_t len_options, char** options);

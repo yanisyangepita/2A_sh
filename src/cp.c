@@ -55,7 +55,10 @@ void cp(char* source, char* dest)
     file2 = fopen(dest, "w");
 
     if(file1 == NULL)
-        errx(EXIT_FAILURE, "not valid argument(s)\n");
+    {
+        errno = E_INVALID_FILE;
+        return;
+    }
 
     if(file2 == NULL)
     {
@@ -78,12 +81,12 @@ void cp(char* source, char* dest)
         else if(ENOENT == errno)
         {
             // Directory does not exist
-            errx(EXIT_FAILURE, "The directory does not exist\n");
+            errno = E_INVALID_DIR;
         }
         else
         {
             // opendir() failed
-            errx(EXIT_FAILURE, "Could not open the directory\n");
+            errno = E_INVALID_DIR;
         }
     }
 

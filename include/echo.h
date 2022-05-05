@@ -7,9 +7,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "../include/touch.h"
-#include "../include/cat.h"
-#include "../include/cp.h"
+
+#include "touch.h"
+#include "cat.h"
+#include "cp.h"
+#include "err.h"
 
 void echo(char* to_echo, char* file);
 

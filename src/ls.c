@@ -46,10 +46,8 @@ void ls(char* directory, size_t len_options, char** options)
     // - Check errors
     if(!dir)
     {
-        if(errno == ENOENT)
-            errx(EXIT_FAILURE, "Directory doesn't exist\n");
-        else
-            errx(EXIT_FAILURE, "Could not open the directory\n");
+        errno = E_INVALID_DIR;
+        return;
     }
 
     struct dirent* d;
@@ -103,13 +101,19 @@ void ls(char* directory, size_t len_options, char** options)
                 }
                 file_path = strcat(file_path, to_sort[i]);
                 if(stat(file_path, &stats))
-                    errx(EXIT_FAILURE, "Could not get stats\n");
+                {
+                    errno = E_INVALID_STAT;
+                    return;
+                }
                 free(file_path);
             }
             else
             {
                 if(stat(to_sort[i], &stats))
-                    errx(EXIT_FAILURE, "Could not get stats\n");
+                {
+                    errno = E_INVALID_STAT;
+                    return;
+                }
             }
 
 
@@ -135,13 +139,20 @@ void ls(char* directory, size_t len_options, char** options)
                 }
                 file_path = strcat(file_path, to_sort[i]);
                 if(stat(file_path, &stats))
-                    errx(EXIT_FAILURE, "Could not get stats\n");
+                {
+                    errno = E_INVALID_STAT;
+                    return;
+
+                }
                 free(file_path);
             }
             else
             {
                 if(stat(to_sort[i], &stats))
-                    errx(EXIT_FAILURE, "Could not get stats\n");
+                {
+                    errno = E_INVALID_STAT;
+                    return;
+                }
             }
 
             // - data
@@ -160,13 +171,19 @@ void ls(char* directory, size_t len_options, char** options)
             // - user data
             struct passwd* pw = getpwuid(stats.st_uid);
             if(pw == NULL)
-                errx(EXIT_FAILURE, "Could not get pw uid\n");
+            {
+                errno = E_INVALID_UID;
+                return;
+            }
             else
                 printf("%s ", pw->pw_name);
 
             struct group* gr = getgrgid(stats.st_gid);
             if(gr == NULL)
-                errx(EXIT_FAILURE, "Could not get gr id");
+            {
+                errno = E_INVALID_UID;
+                return;
+            }
             else
                 printf("%s ", gr->gr_name);
 
@@ -179,7 +196,10 @@ void ls(char* directory, size_t len_options, char** options)
             time_t time = stats.st_mtime;
             tmp = localtime(&time);
             if(tmp == NULL)
-                errx(EXIT_FAILURE, "Could not get the time\n");
+            {
+                errno = E_INVALID_TIME;
+                return;
+            }
             strftime(str, sizeof(str), "%b %d %R", tmp);
             printf("%s ", str);
 
@@ -253,13 +273,19 @@ void ls(char* directory, size_t len_options, char** options)
                 }
                 file_path = strcat(file_path, to_sort[i]);
                 if(stat(file_path, &stats))
-                    errx(EXIT_FAILURE, "Could not get stats\n");
+                {
+                    errno = E_INVALID_STAT;
+                    return;
+                }
                 free(file_path);
             }
             else
             {
                 if(stat(to_sort[i], &stats))
-                    errx(EXIT_FAILURE, "Could not get stats\n");
+                {
+                    errno = E_INVALID_STAT;
+                    return;
+                }
             }
 
             // - directory

@@ -31,6 +31,9 @@ s_ast *found_type(s_token_list *tkl, size_t *current, size_t end,
 void found_func(s_ast *ast, s_token_list *tkl,
         size_t current, size_t end);
 
+void parse_touch(s_ast *ast, s_token_list *tkl,
+        size_t current, size_t end);
+
 void parse_cat(s_ast *ast, s_token_list *tkl,
         size_t current, size_t end);
 

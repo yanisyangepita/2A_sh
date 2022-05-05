@@ -16,8 +16,10 @@ void cat(char* filename, char** options)
     file = fopen(filename, "r");
 
     if(file == NULL)
-        errx(EXIT_FAILURE, "Could not open the file\n");
-
+    {
+        errno = E_INVALID_FILE;
+        return;
+    }
     char c;
     char* end = "";
     if(options != NULL)

@@ -13,7 +13,7 @@ static s_func reserved_func[46] =
     {parse_cd,      CD},
     {parse_ls,      LS},
     {NULL,          MKDIR},
-    {NULL,          TOUCH},
+    {parse_touch,          TOUCH},
     {parse_pwd,          PWD},
     {NULL,          RM},
     {NULL,          MV},
@@ -259,14 +259,16 @@ void horrible_func(char ***tab_files, size_t *len_files,
 
             if (tok.str[i + 1] == '>')
             {
-                opt_files = realloc(opt_files, sizeof(char *) * (*len_opt_files + 1));
+                opt_files = realloc(opt_files, sizeof(char *) *
+                        (*len_opt_files + 1));
                 opt_files[*len_opt_files] = ">>";
                 i++;
             }
             else
             {
                 //opt_files append ">"
-                opt_files = realloc(opt_files, sizeof(char *) * (*len_opt_files + 1));
+                opt_files = realloc(opt_files, sizeof(char *) *
+                        (*len_opt_files + 1));
                 opt_files[*len_opt_files] = ">";
             }
             //next is file until ' '
@@ -321,7 +323,7 @@ void parse_pwd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
     if (ast->right != NULL)
     {
-        errno = E_NACCEPT_OPTION;
+        errno = E_NACCEPT_PARAMETERS;
         return;
     }
     pwd();
@@ -339,7 +341,8 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     size_t len_opt_files = 0;
     char *param = malloc(sizeof(char));
     param[0] = 0;
-    horrible_func(&files, &len_files, &opt_files, &len_opt_files, &param, ast->right->token);
+    horrible_func(&files, &len_files, &opt_files, &len_opt_files, &param,
+            ast->right->token);
 
     if (len_files != 0)
         param[strlen(param) - 1] = 0;
@@ -380,10 +383,16 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
                 echo(to_echo, files[i]);
             }
             free(to_echo);
+            if (errno != 0)
+                return;
         }
     }
     else
+    {
         echo(param, NULL);
+        if (errno != 0)
+            return;
+    }
 
     if (opt != NULL)
     {
@@ -402,6 +411,43 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     free(opt_files);
 }
 
+void parse_touch(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+    {
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+
+    size_t len_files = 0;
+    char **files = NULL;
+    if (ast->right != NULL)
+        files = create_files(&len_files, ast->right->token);
+
+    if (tkl->data[1].token_type == NEWLINE)
+        return;
+
+#ifdef DEBUG
+    for (size_t i = 0; i < len_files; i++)
+        printf("files : %s\n", files[i]);
+#endif
+
+    for (size_t i = 0; i < len_files; i++)
+    {
+        touch(files[i]);
+        if (errno != 0)
+            return;
+    }
+
+    if (files != NULL)
+    {
+        for (size_t i = 0; i < len_files; i++)
+            free(files[i]);
+        free(files);
+    }
+}
 void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     ast->left = found_type(tkl, &current, end, OPTION);
@@ -443,7 +489,11 @@ void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     }
 
     for (size_t i = 0; i < len_files; i++)
+    {
         cat(files[i], valid_options);
+        if (errno != 0)
+            return;
+    }
 
     if (files != NULL)
     {
@@ -489,7 +539,11 @@ void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 #endif
 
     for (size_t i = 0; i < len_files - 1; i++)
+    {
         cp(files[i], files[len_files - 1]);
+        if (errno != 0)
+            return;
+    }
 
     if (files != NULL)
     {
@@ -523,7 +577,11 @@ void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 #endif
 
     if (files != NULL)
+    {
         cd(files[0]);
+        if (errno != 0)
+            return;
+    }
     else
     {
         char *login = getlogin();
@@ -538,6 +596,10 @@ void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
         path = strcat(path, login);
         printf("%s\n", path);
         cd(path);
+        {
+            if (errno != 0)
+                return;
+        }
     }
 
     if (files != NULL)
@@ -592,12 +654,17 @@ void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
             if (len_files >= 2)
                 printf("%s:\n", files[i]);
             ls(files[i], len_valid, opt);
+            if (errno != 0)
+                return;
             if (len_files > 1 && i != len_files - 1)
                 printf("\n");
         }
     }
     else
+    {
         ls(NULL, len_valid, opt);
+        return;
+    }
 
     if (files != NULL)
     {

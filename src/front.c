@@ -12,8 +12,13 @@ static s_err reserved_err[] =
     {"This function does not accept any options", E_NACCEPT_OPTION},
     {"This function need at least 2 parameters", E_NEED2_PARAMETERS},
     {"Invalid option", E_INVALID_OPTION},
-    {"This function need a parameter", E_NEED_PARAMETERS}
-
+    {"This function need a parameter", E_NEED_PARAMETERS},
+    {"This funcion does not accept any parameter", E_NACCEPT_PARAMETERS},
+    {"Invalid file", E_INVALID_FILE},
+    {"Invalid directory", E_INVALID_DIR},
+    {"Statistics of the file unavailable", E_INVALID_STAT},
+    {"UID is unavailable", E_INVALID_UID},
+    {"We live in a society, time is depleted", E_INVALID_TIME}
 };
 
 void check_error()
