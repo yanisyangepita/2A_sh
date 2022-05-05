@@ -84,6 +84,7 @@ int front(void)
 
         check_error();
 
+        wd = get_wd();
         printf("2A-SH <%s: %s>$ ",login, wd);
     }
 
