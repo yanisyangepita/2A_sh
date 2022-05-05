@@ -333,7 +333,18 @@ void parse_pwd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+    {
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
+
+    if (tkl->data[1].token_type == NEWLINE)
+    {
+        printf("\n");
+        return;
+    }
 
     char **files = malloc(sizeof(char *));
     size_t len_files = 0;
