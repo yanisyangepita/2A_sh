@@ -33,6 +33,7 @@ static s_token reserved_words[NB_RESERVED] =
     {"while", WHILE},
     {"until", UNTIL},
     {"for",   FOR},
+    {"clear", CLEAR},
     {"{",     LBRACE},
     {"}",     RBRACE},
     {"!",     BANG},
