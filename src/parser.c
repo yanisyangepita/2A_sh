@@ -817,7 +817,7 @@ void parse(s_token_list *tkl)
 {
     if (tkl->data[0].token_type == NEWLINE)
         return;
-    s_ast *prog = ast_create(tkl->data[0]);
+    s_ast *prog;
     size_t current_index = 0;
     size_t next_prog = 0;
 
@@ -828,18 +828,20 @@ void parse(s_token_list *tkl)
     while (next_prog != tkl->token_count
             && tkl->data[next_prog].token_type != NEWLINE)
     {
+        prog = ast_create(tkl->data[current_index]);
         current_index++;
 
 
         next_prog = found_token(tkl, PIPE, current_index, tkl->token_count);
         found_func(prog, tkl, current_index, next_prog);
+        next_prog++;
+        current_index = next_prog;
         if (errno != 0)
             return;
+#ifdef DEBUG
+        ast_print(prog, 0);
+#endif
+        ast_free(prog);
     }
 
-#ifdef DEBUG
-    ast_print(prog, 0);
-#endif
-
-    ast_free(prog);
 }
