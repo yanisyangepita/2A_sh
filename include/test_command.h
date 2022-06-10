@@ -8,7 +8,8 @@
 
 #include "../include/test_lexer.h"
 #include "../include/utils.h"
+#include "mv.h"
 
-void test_command();
+void test_command(int argc, char* argv[]);
 
 #endif
