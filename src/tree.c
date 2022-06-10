@@ -23,6 +23,18 @@ static s_token leaf_list[NB_LEAF] =
     {"cat",   CAT},
     {"echo",  ECHO},
     {"clear", CLEAR},
+    {"{",     LBRACE},
+    {"}",     RBRACE},
+    {"|",     PIPE},
+    {"(",     LPAREN},
+    {")",     RPAREN},
+    {"<<",    DLESS},
+    {">>",    DGREAT},
+    {"<&",    LESSAND},
+    {">&",    GREATAND},
+    {"<>",    LESSGREAT},
+    {"<<-",   DLESSDASH},
+    {">|",    CLOBBER}
 };
 
 
@@ -123,10 +135,11 @@ void init_tree(s_node* root_node)
     // foreach leaf in the leaf list
     for(size_t i = 0; i < NB_LEAF; i++)
         load_leaf(leaf_list[i], root_node);
-
+/*
 #ifdef DEBUG
     print_tree(root_node);
 #endif
+*/
 }
 
 
@@ -145,9 +158,11 @@ void free_tree(s_node* node)
 
     if(is_leaf_node(node))
     {
+        /*
 #ifdef DEBUG
         printf("%s\n", node->leaf_token->str);
 #endif
+*/
         free(node->leaf_token);
     }
 
@@ -167,6 +182,9 @@ void free_tree(s_node* node)
 /* ------------------------------------------------------------------------- */
 s_node* get_children(s_node* current_node, char current_char)
 {
+    if(current_node == NULL)
+        return NULL;
+
     for(size_t i = 0; i < current_node->children_count; i++)
     {
         if(current_node->children[i]->character == current_char)
@@ -201,7 +219,7 @@ int is_root_node(s_node* current_node)
 /* ------------------------------------------------------------------------- */
 int is_leaf_node(s_node* current_node)
 {
-    return current_node->leaf_token != NULL;
+    return current_node != NULL && current_node->leaf_token != NULL;
 }
 
 
@@ -214,3 +232,29 @@ s_token* get_leaf_token(s_node* leaf_node)
 {
     return leaf_node->leaf_token;
 }
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : check_tree                                                 */
+/*                                                                           */
+/* Description  : if the str corresponds to a leaf                           */
+/*                    e_token_type                                           */
+/*                else                                                       */
+/*                    NONE                                                   */
+/* ------------------------------------------------------------------------- */
+e_token_type check_tree(s_node* root_node, char* str)
+{
+    s_node* current_node = root_node;
+
+    while(current_node != NULL && *str != 0)
+    {
+        current_node = get_children(current_node, *str);
+        str++;
+    }
+
+    if(is_leaf_node(current_node))
+        return get_leaf_token(current_node)->token_type;
+
+    return NONE;
+}
+
