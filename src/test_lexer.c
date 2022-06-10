@@ -18,7 +18,8 @@ void test_lexer(int argc, char** argv)
     //lex(&tokens, argv[1]);
 
     // Free the list of tokens
-    free_tokens(&tokens);
+    //free_tokens(&tokens);
+    test_free_better_tokens(&tokens);
 
     // Free the tree
     free_tree(root_node);

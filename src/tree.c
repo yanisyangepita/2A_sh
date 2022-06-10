@@ -26,6 +26,7 @@ static s_token leaf_list[NB_LEAF] =
     {"{",     LBRACE},
     {"}",     RBRACE},
     {"|",     PIPE},
+    {"\\",    BACKSLASH},
     {"(",     LPAREN},
     {")",     RPAREN},
     {"<<",    DLESS},

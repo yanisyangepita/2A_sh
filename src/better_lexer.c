@@ -37,7 +37,8 @@ int is_special(e_lexer_status status, char character)
     if(status != LEXER_D_QUOTED && status != LEXER_S_QUOTED
              && (character == '{' || character == '}'
                  || character == '(' || character == ')'
-                 || character == '!' || character == '|'))
+                 || character == '!' || character == '|'
+                 || character == '\\'))
         return 1;
 
     return 0;
@@ -86,43 +87,50 @@ void better_lex(s_token_list* tokens, char* source, s_node* root_node)
                     if(lexer->status == LEXER_D_QUOTED)
                         lexer->status = LEXER_END_QUOTE;
                     else
-                    {
                         lexer->status = LEXER_D_QUOTED;
-                        lexer->current_token_type = DQUOTE;
-                    }
+
+                    lexer->current_token_type = DQUOTE;
                 }
                 else if (*source == '\'')
                 {
                     if(lexer->status == LEXER_S_QUOTED)
                         lexer->status = LEXER_END_QUOTE;
                     else
-                    {
                         lexer->status = LEXER_S_QUOTED;
-                        lexer->current_token_type = SQUOTE;
-                    }
+
+                    lexer->current_token_type = SQUOTE;
                 }
-            }
-            else
-            {
-                if(is_special(lexer->status, *source))
-                    lexer->status = LEXER_NEXT;
             }
 
             // go to the next character of the source
             source++;
+
+            if(*(source - 1) != '\\' &&
+                    ((*source == '\'' && lexer->status == LEXER_S_QUOTED)
+                     || (*source == '"' && lexer->status == LEXER_D_QUOTED)))
+            {
+                lexer->current_token_type = STRING;
+            }
+            else if(is_special(lexer->status, *source)
+                        || is_special(lexer->status, *(source - 1)))
+            {
+                lexer->status = LEXER_NEXT;
+            }
         }
 
         lexer->current_str[current_len] = 0;
 
         if(lexer->current_str[0] == 0)
+        {
+            source++;
+            free(lexer->current_str);
             continue;
+        }
 
         // Set the token_type of the current token
-        else if(lexer->current_token_type != NONE)
+        else if(lexer->current_token_type == NONE)
         {
-            if(lexer->status == LEXER_END_QUOTE)
-                lexer->current_token_type = STRING;
-            else if(lexer->current_str[0] == '-')
+            if(lexer->current_str[0] == '-')
                 lexer->current_token_type = OPTION;
             else
             {
@@ -145,7 +153,6 @@ void better_lex(s_token_list* tokens, char* source, s_node* root_node)
 
     // add the newline token at the end of the token list
     lexer->current_token_type = NEWLINE;
-    lexer->current_str = malloc(sizeof(char));
     lexer->current_str = "";
     add_better_token(tokens, lexer->current_str,
             lexer->current_token_type);
