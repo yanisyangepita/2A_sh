@@ -813,35 +813,53 @@ void check_grammar(s_token_list *tkl)
         errno = E_GRAMMAR_BRA;
 }
 
+s_ast *make_prog(s_token_list *tkl, size_t start, size_t end)
+{
+    s_ast *prog = ast_create(tkl->data[start]);
+    for (size_t i = end; i > start; i--)
+    {
+        if (tkl->data[i].token_type == PIPE)
+        {
+            printf("detected\n");
+            prog = ast_create(tkl->data[i]);
+            prog->right = ast_create(tkl->data[i+1]);
+            prog->left = make_prog(tkl, start, i - 1);
+            return prog;
+        }
+    }
+    return prog;
+}
+
 void parse(s_token_list *tkl)
 {
     if (tkl->data[0].token_type == NEWLINE)
         return;
-    s_ast *prog;
-    size_t current_index = 0;
-    size_t next_prog = 0;
+    /* size_t current_index = 0; */
+    /* size_t next_prog = 0; */
 
     check_grammar(tkl);
     if (errno != 0)
         return;
 
-    while (next_prog != tkl->token_count
-            && tkl->data[next_prog].token_type != NEWLINE)
-    {
-        prog = ast_create(tkl->data[current_index]);
-        current_index++;
+    s_ast *prog = make_prog(tkl, 0, tkl->token_count - 1);
+
+    /* while (next_prog != tkl->token_count */
+    /*         && tkl->data[next_prog].token_type != NEWLINE) */
+    /* { */
+    /*     prog = ast_create(tkl->data[current_index]); */
+    /*     current_index++; */
 
 
-        next_prog = found_token(tkl, PIPE, current_index, tkl->token_count);
-        found_func(prog, tkl, current_index, next_prog);
-        next_prog++;
-        current_index = next_prog;
-        if (errno != 0)
-            return;
+    /*     next_prog = found_token(tkl, PIPE, current_index, tkl->token_count); */
+    /*     found_func(prog, tkl, current_index, next_prog); */
+    /*     next_prog++; */
+    /*     current_index = next_prog; */
+    /*     if (errno != 0) */
+    /*         return; */
+    /* } */
+
 #ifdef DEBUG
-        ast_print(prog, 0);
+    ast_print(prog, 0);
 #endif
-        ast_free(prog);
-    }
-
+    ast_free(prog);
 }
