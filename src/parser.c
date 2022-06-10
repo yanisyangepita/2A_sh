@@ -7,52 +7,52 @@ char* options_echo[1] = {"<<"};
 
 static s_func reserved_func[46] =
 {
-    {NULL,          NUMBER},
-    {NULL,          STRING},
-    {NULL,          IDENTIFIER},
-    {parse_cd,      CD},
-    {parse_ls,      LS},
-    {NULL,          MKDIR},
-    {parse_touch,          TOUCH},
-    {parse_pwd,          PWD},
-    {NULL,          RM},
-    {NULL,          MV},
-    {parse_cp,      CP},
-    {parse_cat,     CAT},
-    {parse_echo,    ECHO},
-    {NULL,          IF},
-    {NULL,          THEN},
-    {NULL,          ELSE},
-    {NULL,          ELIF},
-    {NULL,          FI},
-    {NULL,          DO},
-    {NULL,          DONE},
-    {NULL,          CASE},
-    {NULL,          ESAC},
-    {NULL,          WHILE},
-    {NULL,          UNTIL},
-    {NULL,          FOR},
-    {NULL,          LBRACE},
-    {NULL,          RBRACE},
-    {NULL,          BANG},
-    {NULL,          IN},
-    {NULL,          AND_IF},
-    {NULL,          OR_IF},
-    {NULL,          DSEMI},
-    {NULL,          DLESS},
-    {NULL,          DGREAT},
-    {NULL,     LESSAND},
-    {NULL,    GREATAND},
-    {NULL,   LESSGREAT},
-    {NULL,   DLESSDASH},
-    {NULL,     CLOBBER},
-    {NULL,        PIPE},
-    {NULL,      LPAREN},
-    {NULL,      RPAREN},
-    {NULL,     NEWLINE},
-    {NULL,      DQUOTE},
-    {NULL,      SQUOTE},
-    {NULL,      OPTION}
+    {NULL,          NULL, NUMBER, 0},
+    {NULL,          NULL, STRING, 0},
+    {NULL,          NULL, IDENTIFIER, 0},
+    {parse_cd,      NULL, CD, 0},
+    {parse_ls,      NULL, LS, 0},
+    {NULL,          NULL, MKDIR, 0},
+    {parse_touch,   NULL, TOUCH, 0},
+    {parse_pwd,     NULL, PWD, 0},
+    {NULL,          NULL, RM, 0},
+    {NULL,          NULL, MV, 0},
+    {parse_cp,      NULL, CP, 0},
+    {parse_cat,     NULL, CAT, 0},
+    {parse_echo,    exec_echo, ECHO, 0},
+    {NULL,          NULL, IF, 0},
+    {NULL,          NULL, THEN, 0},
+    {NULL,          NULL, ELSE, 0},
+    {NULL,          NULL, ELIF, 0},
+    {NULL,          NULL, FI, 0},
+    {NULL,          NULL, DO, 0},
+    {NULL,          NULL, DONE, 0},
+    {NULL,          NULL, CASE, 0},
+    {NULL,          NULL, ESAC, 0},
+    {NULL,          NULL, WHILE, 0},
+    {NULL,          NULL, UNTIL, 0},
+    {NULL,          NULL, FOR, 0},
+    {NULL,          NULL, LBRACE, 0},
+    {NULL,          NULL, RBRACE, 0},
+    {NULL,          NULL, BANG, 0},
+    {NULL,          NULL, IN, 0},
+    {NULL,          NULL, AND_IF, 0},
+    {NULL,          NULL, OR_IF, 0},
+    {NULL,          NULL, DSEMI, 0},
+    {NULL,          NULL, DLESS, 0},
+    {NULL,          NULL, DGREAT, 0},
+    {NULL,          NULL, LESSAND, 0},
+    {NULL,          NULL, GREATAND, 0},
+    {NULL,          NULL, LESSGREAT, 0},
+    {NULL,          NULL, DLESSDASH, 0},
+    {NULL,          NULL, CLOBBER, 0},
+    {NULL,          exec_pipe, PIPE, 1},
+    {NULL,          NULL, LPAREN, 0},
+    {NULL,          NULL, RPAREN, 0},
+    {NULL,          NULL, NEWLINE, 0},
+    {NULL,          NULL, DQUOTE, 0},
+    {NULL,          NULL, SQUOTE, 0},
+    {NULL,          NULL, OPTION, 0}
 };
 
 
@@ -339,8 +339,11 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
         return;
     }
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
+}
 
-    if (tkl->data[1].token_type == NEWLINE)
+void exec_echo(s_ast *ast)
+{
+    if (ast->right == NULL)
     {
         printf("\n");
         return;
@@ -420,6 +423,14 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     }
     free(param);
     free(opt_files);
+}
+
+void exec_pipe(s_ast *prog)
+{
+    if (reserved_func[prog->left->token.token_type].is_pipeable
+            && reserved_func[prog->right->token.token_type].is_pipeable)
+        reserved_func[prog->left->token.token_type].exec(prog->left);
+    reserved_func[prog->right->token.token_type].exec(prog->right);
 }
 
 void parse_touch(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
@@ -695,11 +706,11 @@ void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
         free(valid_options);
 }
 
-void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+void call_parse_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
-    if (reserved_func[ast->token.token_type].func != NULL)
+    if (reserved_func[ast->token.token_type].parse != NULL)
     {
-        reserved_func[ast->token.token_type].func(ast, tkl, current, end);
+        reserved_func[ast->token.token_type].parse(ast, tkl, current, end);
         if (errno != 0)
             return;
     }
@@ -707,6 +718,16 @@ void found_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     {
         errno = E_INVALID_FUNCTION;
         return;
+    }
+}
+
+void exec_prog(s_ast *prog)
+{
+    if (reserved_func[prog->token.token_type].exec != NULL)
+    {
+        reserved_func[prog->token.token_type].exec(prog);
+        if (errno != 0)
+            return;
     }
 }
 
@@ -820,13 +841,18 @@ s_ast *make_prog(s_token_list *tkl, size_t start, size_t end)
     {
         if (tkl->data[i].token_type == PIPE)
         {
-            printf("detected\n");
             prog = ast_create(tkl->data[i]);
-            prog->right = ast_create(tkl->data[i+1]);
+            prog->right = ast_create(tkl->data[i + 1]);
+            if (tkl->data[end].token_type != NEWLINE)
+                end++;
+            call_parse_func(prog->right, tkl, i + 2, end);
             prog->left = make_prog(tkl, start, i - 1);
             return prog;
         }
     }
+    if (tkl->data[end].token_type != NEWLINE)
+        end++;
+    call_parse_func(prog, tkl, start + 1, end);
     return prog;
 }
 
@@ -842,6 +868,8 @@ void parse(s_token_list *tkl)
         return;
 
     s_ast *prog = make_prog(tkl, 0, tkl->token_count - 1);
+
+    exec_prog(prog);
 
     /* while (next_prog != tkl->token_count */
     /*         && tkl->data[next_prog].token_type != NEWLINE) */
