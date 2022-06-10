@@ -161,7 +161,6 @@ void create_better_token(s_token* token, char* str,
 /*                                                                           */
 /* Description  : add the token to the token_list                            */
 /* ------------------------------------------------------------------------- */
-
 void add_better_token(s_token_list* tokens, char* str, e_token_type token_type)
 {
     if(tokens->token_count >= tokens->list_size)
@@ -177,6 +176,40 @@ void add_better_token(s_token_list* tokens, char* str, e_token_type token_type)
 
     tokens->token_count++;
 }
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : free_better_tokens                                         */
+/*                                                                           */
+/* Description  : free the token_list                                        */
+/* ------------------------------------------------------------------------- */
+void free_better_tokens(s_token_list* tokens)
+{
+    for (size_t i = 0; i < tokens->token_count; i++)
+    {
+        if (tokens->data[i].token_type == NONE)
+            free(tokens->data[i].str);
+    }
+    free(tokens->data);
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : test_free_better_tokens                                    */
+/*                                                                           */
+/* Description  : free the token_list                                        */
+/* ------------------------------------------------------------------------- */
+void test_free_better_tokens(s_token_list* tokens)
+{
+    for (size_t i = 0; i < tokens->token_count; i++)
+    {
+        if(tokens->data[i].token_type != NEWLINE)
+            free(tokens->data[i].str);
+    }
+
+    free(tokens->data);
+}
+
 
 /* ------------------------------------------------------------------------- */
 /* Function     : create_token_list                                          */
