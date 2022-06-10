@@ -3,7 +3,7 @@
 
 #include "token.h"
 
-#define NB_LEAF     11
+#define NB_LEAF     23
 
 struct s_node
 {
@@ -23,5 +23,6 @@ s_node* get_children(s_node* current_node, char current_char);
 int is_root_node(s_node* current_node);
 int is_leaf_node(s_node* current_node);
 s_token* get_leaf_token(s_node* leaf_node);
+e_token_type check_tree(s_node* root_node, char* str);
 
 #endif

@@ -56,8 +56,10 @@ e_token_type check_number(char* str);
 void search_token(s_token* token, char* str, e_token_type token_type);
 void create_token(s_token* token, char* str, e_token_type token_type);
 
-void create_better_token(s_token* current_token);
-void append_to_current_token(s_token* current_token, char* to_append);
+void create_better_token(s_token* current_token, char* str,
+        e_token_type token_type);
+void add_better_token(s_token_list* tokens, char* str,
+        e_token_type token_type);
 
 void create_token_list(s_token_list* tokens, size_t list_size);
 void add_token(s_token_list* tokens, s_token token);
