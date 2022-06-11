@@ -7,7 +7,18 @@
 #include "err.h"
 #include <errno.h>
 
-void parse_echo(s_ast *ast, s_token_list *tkl,
-        size_t current, size_t end);
+void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
+void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
+void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
+void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
+void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
+void parse_pwd(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
+void parse_touch(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
 #endif

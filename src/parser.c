@@ -1,24 +1,19 @@
 #include "../include/parser.h"
-#include "../include/utils.h"
-
-char* options_ls[2] = {"a", "l"};
-char* options_cat[1] = {"e"};
-char* options_echo[1] = {"<<"};
 
 static s_func reserved_func[46] =
 {
     {NULL,          NULL, NUMBER, 0},
     {NULL,          NULL, STRING, 0},
     {NULL,          NULL, IDENTIFIER, 0},
-    {/* parse_cd, */ NULL,     NULL, CD, 0},
-    {/* parse_ls,*/ NULL,     NULL, LS, 0},
+    {parse_cd,      exec_cd, CD, 0},
+    {parse_ls,      exec_ls, LS, 0},
     {NULL,          NULL, MKDIR, 0},
-    {/* parse_touch, */NULL,   NULL, TOUCH, 0},
-    {/* parse_pwd, */NULL,     NULL, PWD, 0},
+    {parse_touch,   exec_touch, TOUCH, 0},
+    {parse_pwd,     exec_pwd, PWD, 0},
     {NULL,          NULL, RM, 0},
     {NULL,          NULL, MV, 0},
-    {/* parse_cp, */NULL,      NULL, CP, 0},
-    {/* parse_cat, */NULL,     NULL, CAT, 0},
+    {parse_cp,      exec_cat, CP, 0},
+    {parse_cat,     exec_cat, CAT, 0},
     {parse_echo,    exec_echo, ECHO, 0},
     {NULL,          NULL, IF, 0},
     {NULL,          NULL, THEN, 0},
@@ -46,7 +41,7 @@ static s_func reserved_func[46] =
     {NULL,          NULL, LESSGREAT, 0},
     {NULL,          NULL, DLESSDASH, 0},
     {NULL,          NULL, CLOBBER, 0},
-    {NULL,          NULL, PIPE, 1},
+    {NULL,          exec_pipe, PIPE, 1},
     {NULL,          NULL, LPAREN, 0},
     {NULL,          NULL, RPAREN, 0},
     {NULL,          NULL, NEWLINE, 0},
@@ -55,304 +50,13 @@ static s_func reserved_func[46] =
     {NULL,          NULL, OPTION, 0}
 };
 
-/* void parse_pwd(s_ast *ast, s_token_list *tkl, size_t current, size_t end) */
-/* { */
-/*     ast->left = found_type(tkl, &current, end, OPTION); */
-/*     if (ast->left != NULL) */
-/*     { */
-/*         errno = E_NACCEPT_OPTION; */
-/*         return; */
-/*     } */
-/*     ast->right = found_type(tkl, &current, end, IDENTIFIER); */
-/*     if (ast->right != NULL) */
-/*     { */
-/*         errno = E_NACCEPT_PARAMETERS; */
-/*         return; */
-/*     } */
-/*     pwd(); */
-/*     printf("\n"); */
-/* } */
-
-/* void exec_pipe(s_ast *prog, char **res) */
-/* { */
-/*     if (reserved_func[prog->left->token.token_type].is_pipeable */
-/*             && reserved_func[prog->right->token.token_type].is_pipeable) */
-/*         reserved_func[prog->left->token.token_type].exec(prog->left, res); */
-/*     reserved_func[prog->right->token.token_type].exec(prog->right, res); */
-/* } */
-
-/* void parse_touch(s_ast *ast, s_token_list *tkl, size_t current, size_t end) */
-/* { */
-/*     ast->left = found_type(tkl, &current, end, OPTION); */
-/*     if (ast->left != NULL) */
-/*     { */
-/*         errno = E_NACCEPT_OPTION; */
-/*         return; */
-/*     } */
-/*     ast->right = found_type(tkl, &current, end, IDENTIFIER); */
-
-/*     size_t len_files = 0; */
-/*     char **files = NULL; */
-/*     if (ast->right != NULL) */
-/*         files = create_files(&len_files, ast->right->token); */
-
-/*     if (tkl->data[1].token_type == NEWLINE) */
-/*         return; */
-
-/* #ifdef DEBUG */
-/*     for (size_t i = 0; i < len_files; i++) */
-/*         printf("files : %s\n", files[i]); */
-/* #endif */
-
-/*     for (size_t i = 0; i < len_files; i++) */
-/*     { */
-/*         touch(files[i]); */
-/*         if (errno != 0) */
-/*             return; */
-/*     } */
-
-/*     if (files != NULL) */
-/*     { */
-/*         for (size_t i = 0; i < len_files; i++) */
-/*             free(files[i]); */
-/*         free(files); */
-/*     } */
-/* } */
-/* void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end) */
-/* { */
-/*     ast->left = found_type(tkl, &current, end, OPTION); */
-/*     ast->right = found_type(tkl, &current, end, IDENTIFIER); */
-/*     if (ast->right == NULL) */
-/*     { */
-/*         errno = E_NEED_PARAMETERS; */
-/*         return; */
-/*     } */
-
-/*     size_t len_files = 0; */
-/*     char **files = NULL; */
-/*     if (ast->right != NULL) */
-/*         files = create_files(&len_files, ast->right->token); */
-
-/*     size_t len_opt = 0; */
-/*     char **opt = NULL; */
-/*     if (ast->left != NULL) */
-/*         opt = create_opt(&len_opt, ast->left->token); */
-
-/* #ifdef DEBUG */
-/*     for (size_t i = 0; i < len_opt; i++) */
-/*         printf("opt : %s\n", opt[i]); */
-
-/*     for (size_t i = 0; i < len_files; i++) */
-/*         printf("files : %s\n", files[i]); */
-/* #endif */
-
-/*     size_t len_valid = 0; */
-/*     char **valid_options = NULL; */
-/*     if (ast->left != NULL) */
-/*     { */
-/*         valid_options = get_options(len_opt, opt, 1, options_cat, &len_valid); */
-/*         if (valid_options == NULL) */
-/*         { */
-/*             errno = E_INVALID_OPTION; */
-/*             return; */
-/*         } */
-/*     } */
-
-/*     for (size_t i = 0; i < len_files; i++) */
-/*     { */
-/*         cat(files[i], valid_options); */
-/*         if (errno != 0) */
-/*             return; */
-/*     } */
-
-/*     if (files != NULL) */
-/*     { */
-/*         for (size_t i = 0; i < len_files; i++) */
-/*             free(files[i]); */
-/*         free(files); */
-/*     } */
-
-/*     if (opt != NULL) */
-/*     { */
-/*         for (size_t i = 0; i < len_opt; i++) */
-/*             free(opt[i]); */
-/*         free(opt); */
-/*     } */
-
-/*     if (valid_options != NULL) */
-/*         free(valid_options); */
-/* } */
-
-/* void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end) */
-/* { */
-/*     ast->left = found_type(tkl, &current, end, OPTION); */
-/*     if (ast->left != NULL) */
-/*     { */
-/*         errno = E_NACCEPT_OPTION; */
-/*         return; */
-/*     } */
-/*     ast->right = found_type(tkl, &current, end, IDENTIFIER); */
-
-/*     size_t len_files = 0; */
-/*     char **files = NULL; */
-/*     if (ast->right != NULL) */
-/*         files = create_files(&len_files, ast->right->token); */
-
-/*     if (len_files < 2) */
-/*     { */
-/*         errno = E_NEED2_PARAMETERS; */
-/*         return; */
-/*     } */
-/* #ifdef DEBUG */
-/*     for (size_t i = 0; i < len_files - 1; i++) */
-/*         printf("cp %s into %s\n", files[i], files[len_files - 1]); */
-/* #endif */
-
-/*     for (size_t i = 0; i < len_files - 1; i++) */
-/*     { */
-/*         cp(files[i], files[len_files - 1]); */
-/*         if (errno != 0) */
-/*             return; */
-/*     } */
-
-/*     if (files != NULL) */
-/*     { */
-/*         for (size_t i = 0; i < len_files; i++) */
-/*             free(files[i]); */
-/*         free(files); */
-/*     } */
-/* } */
-
-/* void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end) */
-/* { */
-/*     ast->left = found_type(tkl, &current, end, OPTION); */
-/*     if (ast->left != NULL) */
-/*     { */
-/*         errno = E_NACCEPT_OPTION; */
-/*         return; */
-/*     } */
-/*     ast->right = found_type(tkl, &current, end, IDENTIFIER); */
-
-/*     size_t len_files = 0; */
-/*     char **files = NULL; */
-/*     if (ast->right != NULL) */
-/*         files = create_files(&len_files, ast->right->token); */
-
-
-/* #ifdef DEBUG */
-/*     if (files != NULL) */
-/*         printf("cd -> %s\n", files[0]); */
-/*     else */
-/*         printf("cd ->  ~\n"); */
-/* #endif */
-
-/*     if (files != NULL) */
-/*     { */
-/*         cd(files[0]); */
-/*         if (errno != 0) */
-/*             return; */
-/*     } */
-/*     else */
-/*     { */
-/*         char *login = getlogin(); */
-/*         char *path = malloc(sizeof(char) * (7 + strlen(login))); */
-/*         path[0] = '/'; */
-/*         path[1] = 'h'; */
-/*         path[2] = 'o'; */
-/*         path[3] = 'm'; */
-/*         path[4] = 'e'; */
-/*         path[5] = '/'; */
-/*         path[6] = 0; */
-/*         path = strcat(path, login); */
-/*         printf("%s\n", path); */
-/*         cd(path); */
-/*         { */
-/*             if (errno != 0) */
-/*                 return; */
-/*         } */
-/*     } */
-
-/*     if (files != NULL) */
-/*     { */
-/*         for (size_t i = 0; i < len_files; i++) */
-/*             free(files[i]); */
-/*         free(files); */
-/*     } */
-/* } */
-
-/* void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end) */
-/* { */
-/*     ast->left = found_type(tkl, &current, end, OPTION); */
-/*     ast->right = found_type(tkl, &current, end, IDENTIFIER); */
-
-/*     size_t len_opt = 0; */
-/*     char **opt = NULL; */
-/*     if (ast->left != NULL) */
-/*         opt = create_opt(&len_opt, ast->left->token); */
-
-/*     size_t len_files = 0; */
-/*     char **files = NULL; */
-/*     if (ast->right != NULL) */
-/*         files = create_files(&len_files, ast->right->token); */
-
-
-/* #ifdef DEBUG */
-/*     for (size_t i = 0; i < len_opt; i++) */
-/*         printf("opt : %s\n", opt[i]); */
-
-/*     for (size_t i = 0; i < len_files; i++) */
-/*         printf("files : %s\n", files[i]); */
-/* #endif */
-
-
-/*     size_t len_valid = 0; */
-/*     char **valid_options = NULL; */
-/*     if (ast->left != NULL) */
-/*     { */
-/*         valid_options = get_options(len_opt, opt, 2, options_ls, &len_valid); */
-/*         if (valid_options == NULL) */
-/*         { */
-/*             errno = E_INVALID_OPTION; */
-/*             return; */
-/*         } */
-/*     } */
-
-/*     if (files != NULL) */
-/*     { */
-/*         for (size_t i = 0; i < len_files; i++) */
-/*         { */
-/*             if (len_files >= 2) */
-/*                 printf("%s:\n", files[i]); */
-/*             ls(files[i], len_valid, opt); */
-/*             if (errno != 0) */
-/*                 return; */
-/*             if (len_files > 1 && i != len_files - 1) */
-/*                 printf("\n"); */
-/*         } */
-/*     } */
-/*     else */
-/*     { */
-/*         ls(NULL, len_valid, opt); */
-/*         return; */
-/*     } */
-
-/*     if (files != NULL) */
-/*     { */
-/*         for (size_t i = 0; i < len_files; i++) */
-/*             free(files[i]); */
-/*         free(files); */
-/*     } */
-
-/*     if (opt != NULL) */
-/*     { */
-/*         for (size_t i = 0; i < len_opt; i++) */
-/*             free(opt[i]); */
-/*         free(opt); */
-/*     } */
-
-/*     if (valid_options != NULL) */
-/*         free(valid_options); */
-/* } */
+void exec_pipe(s_ast *prog, char **res)
+{
+    if (reserved_func[prog->left->token.token_type].is_pipeable
+            && reserved_func[prog->right->token.token_type].is_pipeable)
+        reserved_func[prog->left->token.token_type].exec(prog->left, res);
+    reserved_func[prog->right->token.token_type].exec(prog->right, res);
+}
 
 void call_parse_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
