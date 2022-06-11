@@ -7,6 +7,8 @@
 #include <err.h>
 #include <string.h>
 #include <unistd.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 #include "parser.h"
 #include "better_lexer.h"

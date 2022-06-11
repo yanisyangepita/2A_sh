@@ -1,8 +1,8 @@
 # Makefile
 
 CPPFLAGS = -MMD
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -c -std=c99
+CC = gcc -lreadline
+CFLAGS = -Wall -Wextra -c -std=c99
 LDFLAGS =
 
 SRC = ${wildcard src/*.c}

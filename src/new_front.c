@@ -67,7 +67,7 @@ int new_front(void)
 
     int cond = 42;
     char* input = calloc(ARG_MAX, sizeof(char));
-    char* buffer = calloc(ARG_MAX, sizeof(char));
+    /* char* buffer = calloc(ARG_MAX, sizeof(char)); */
 
     // Create the tree for the better lexer uwu
     s_node* root_node = malloc(sizeof(s_node));
@@ -77,7 +77,8 @@ int new_front(void)
 
     while(cond)
     {
-        input = fgets(buffer, ARG_MAX, stdin);
+        /* input = fgets(buffer, ARG_MAX, stdin); */
+        input = readline("");
 
         //Val shenanigans, IDK what it does
         s_token_list tokens;
@@ -96,6 +97,6 @@ int new_front(void)
     free_tree(root_node);
     free(wd);
     free(input);
-    free(buffer);
+    /* free(buffer); */
     return EXIT_SUCCESS;
 }
