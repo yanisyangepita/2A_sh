@@ -13,7 +13,7 @@
 #include "cp.h"
 #include "err.h"
 
-void echo(char* to_echo, char* file);
+void echo(char* to_echo, char* file, char **res);
 
 
 #endif

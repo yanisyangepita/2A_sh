@@ -1,7 +1,8 @@
 #include "../include/echo.h"
 
-void echo(char* to_echo, char* file)
+void echo(char* to_echo, char* file, char **res)
 {
+    char *result = *res;
     // If one parameter is passed:
     if (file == NULL)
     {
@@ -14,7 +15,9 @@ void echo(char* to_echo, char* file)
         {
             errno = 0;
             // copy the standard input to the standard output.
-            printf("%s\n", to_echo);
+            /* printf("%s\n", to_echo); */
+            result = realloc(result, sizeof(char *) * (strlen(to_echo) + 1));
+            sprintf(result, "%s\n", to_echo);
         }
     }
 
@@ -41,4 +44,5 @@ void echo(char* to_echo, char* file)
             fclose(filefile);
         }
     }
+    *res = result;
 }
