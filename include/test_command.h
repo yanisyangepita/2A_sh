@@ -6,9 +6,9 @@
 #include <err.h>
 #include <string.h>
 
-#include "../include/test_lexer.h"
-#include "../include/utils.h"
+#include "test_lexer.h"
+#include "mkdir.h"
 
-void test_command();
+void test_command(int argc, char* argv[]);
 
 #endif
