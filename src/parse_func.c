@@ -50,6 +50,38 @@ void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
 }
 
+void parse_mkdir(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+    {
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+    if (ast->right == NULL)
+    {
+        errno = E_NEED_PARAMETERS;
+        return;
+    }
+}
+
+void parse_mv(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+    {
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+    if (ast->right == NULL)
+    {
+        errno = E_NEED_PARAMETERS;
+        return;
+    }
+}
+
 void parse_pwd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     ast->left = found_type(tkl, &current, end, OPTION);
@@ -62,6 +94,17 @@ void parse_pwd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     if (ast->right != NULL)
     {
         errno = E_NACCEPT_PARAMETERS;
+        return;
+    }
+}
+
+void parse_rm(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+    if (ast->right == NULL)
+    {
+        errno = E_NEED_PARAMETERS;
         return;
     }
 }

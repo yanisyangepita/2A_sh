@@ -124,7 +124,7 @@ void ls(char* directory, size_t len_options, char** options, char **res)
         }
 
         len += 7 + nbrlen(total/2);
-        result = realloc(result, (sizeof(char *) * len ));
+        result = realloc(result, (sizeof(char) * len ));
         tmp = result;
         sprintf(result, "%stotal %zu\n", tmp, total / 2);
 
@@ -163,7 +163,7 @@ void ls(char* directory, size_t len_options, char** options, char **res)
 
             // - data
             len += 11 + nbrlen(stats.st_nlink);
-            result = realloc(result, (sizeof(char *) * len ));
+            result = realloc(result, (sizeof(char) * len ));
             tmp = result;
             sprintf(result, (S_ISDIR(stats.st_mode)) ? "%sd" : "%s-", tmp);
             tmp = result;
@@ -197,7 +197,7 @@ void ls(char* directory, size_t len_options, char** options, char **res)
             else
             {
                 len += strlen(pw->pw_name) + 1 + 1;
-                result = realloc(result, (sizeof(char *) * len));
+                result = realloc(result, (sizeof(char) * len));
                 tmp = result;
                 sprintf(result, "%s%s ", tmp , pw->pw_name);
             }
@@ -211,14 +211,14 @@ void ls(char* directory, size_t len_options, char** options, char **res)
             else
             {
                 len += strlen(gr->gr_name) + 1 + 1;
-                result = realloc(result, (sizeof(char *) * len));
+                result = realloc(result, (sizeof(char) * len));
                 tmp = result;
                 sprintf(result, "%s%s ", tmp, gr->gr_name);
             }
 
             // - size
             len += nbrlen(stats.st_size) + 1 + 1;
-            result = realloc(result, (sizeof(char *) * len));
+            result = realloc(result, (sizeof(char) * len));
             tmp = result;
             sprintf(result, "%s%5ld ", tmp, stats.st_size);
 
@@ -234,7 +234,7 @@ void ls(char* directory, size_t len_options, char** options, char **res)
             }
             strftime(str, sizeof(str), "%b %d %R", tmp_tm);
             len += strlen(str);
-            result = realloc(result, (sizeof(char *) * len));
+            result = realloc(result, (sizeof(char) * len));
             tmp = result;
             sprintf(result, "%s%s ", tmp, str);
 
@@ -242,7 +242,7 @@ void ls(char* directory, size_t len_options, char** options, char **res)
             if(S_ISDIR(stats.st_mode))
             {
                 len += 7 + 5 + strlen(to_sort[i]) + 2 + 1;
-                result = realloc(result, (sizeof(char *) * len));
+                result = realloc(result, (sizeof(char) * len));
                 tmp = result;
                 sprintf(result, "%s\033[1;32m%s \033[0m\n", tmp, to_sort[i]);
                 /* printf("\033[1;32m"); */
@@ -253,7 +253,7 @@ void ls(char* directory, size_t len_options, char** options, char **res)
             else if(stats.st_mode & S_IXUSR)
             {
                 len += 7 + 5 + strlen(to_sort[i]) + 2 + 1;
-                result = realloc(result, (sizeof(char *) * len));
+                result = realloc(result, (sizeof(char) * len));
                 tmp = result;
                 sprintf(result, "%s\033[1;36m%s \033[0m\n", tmp, to_sort[i]);
                 /* printf("\033[1;36m"); */
@@ -264,7 +264,7 @@ void ls(char* directory, size_t len_options, char** options, char **res)
             else
             {
                 len += strlen(to_sort[i]) + 2 + 1;
-                result = realloc(result, (sizeof(char *) * len));
+                result = realloc(result, (sizeof(char) * len));
                 tmp = result;
                 sprintf(result, "%s%s \n", tmp, to_sort[i]);
             }
@@ -338,7 +338,7 @@ void ls(char* directory, size_t len_options, char** options, char **res)
             if(S_ISDIR(stats.st_mode))
             {
                 len += 7 + 5 + strlen(to_sort[i]) + 1 + 1;
-                result = realloc(result, (sizeof(char *) * len));
+                result = realloc(result, (sizeof(char) * len));
                 tmp = result;
                 sprintf(result, "%s\033[1;32m%s \033[0m", tmp, to_sort[i]);
             }
@@ -346,7 +346,7 @@ void ls(char* directory, size_t len_options, char** options, char **res)
             else if(stats.st_mode & S_IXUSR)
             {
                 len += 7 + 5 + strlen(to_sort[i]) + 2 + 1;
-                result = realloc(result, (sizeof(char *) * len));
+                result = realloc(result, (sizeof(char) * len));
                 tmp = result;
                 sprintf(result, "%s\033[1;36m%s \033[0m", tmp, to_sort[i]);
             }
@@ -354,9 +354,9 @@ void ls(char* directory, size_t len_options, char** options, char **res)
             else
             {
                 len += strlen(to_sort[i]) + 1 + 1;
-                result = realloc(result, (sizeof(char *) * len));
+                result = realloc(result, (sizeof(char) * len));
                 tmp = result;
-                sprintf(result, "%s%s  ", tmp, to_sort[i]);
+                sprintf(result, "%s%s ", tmp, to_sort[i]);
             }
 
             free(to_sort[i]);
@@ -366,7 +366,7 @@ void ls(char* directory, size_t len_options, char** options, char **res)
         free(to_sort);
 
         len++;
-        result = realloc(result, (sizeof(char *) * len));
+        result = realloc(result, (sizeof(char) * len));
         tmp = result;
         sprintf(result, "%s\n", tmp);
     }

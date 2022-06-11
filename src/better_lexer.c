@@ -56,8 +56,8 @@ void better_lex(s_token_list* tokens, char* source, s_node* root_node)
     // Initialize the lexer
     s_lexer* lexer = malloc(sizeof(s_lexer));
     lexer->status = LEXER_NORMAL;
-
-    while(*source != 0)
+    size_t source_index = 0;
+    while(source[source_index] != '\0')
     {
         // Initialize the status, type and str of the current_token
         if(lexer->status != LEXER_D_QUOTED && lexer->status != LEXER_S_QUOTED)
@@ -68,7 +68,7 @@ void better_lex(s_token_list* tokens, char* source, s_node* root_node)
         size_t current_len = 0;
 
         // get the str of the token
-        while(!is_separator(lexer->status, *source)
+        while (!is_separator(lexer->status, source[source_index])
                 && lexer->status != LEXER_END_QUOTE
                 && lexer->status != LEXER_NEXT
                 && lexer->current_token_type == NONE)
@@ -76,24 +76,24 @@ void better_lex(s_token_list* tokens, char* source, s_node* root_node)
             // update the str of the current token
             lexer->current_str = realloc(lexer->current_str,
                     sizeof(char) * (current_len + 2));
-            lexer->current_str[current_len] = *source;
+            lexer->current_str[current_len] = source[source_index];
             current_len++;
 
             // <d_quote> <s_quote>
-            if(*(source - 1) != '\\')
+            if (source_index != 0 && source[source_index - 1] != '\\')
             {
-                if(*source == '"')
+                if (source[source_index] == '"')
                 {
-                    if(lexer->status == LEXER_D_QUOTED)
+                    if (lexer->status == LEXER_D_QUOTED)
                         lexer->status = LEXER_END_QUOTE;
                     else
                         lexer->status = LEXER_D_QUOTED;
 
                     lexer->current_token_type = DQUOTE;
                 }
-                else if (*source == '\'')
+                else if (source[source_index] == '\'')
                 {
-                    if(lexer->status == LEXER_S_QUOTED)
+                    if (lexer->status == LEXER_S_QUOTED)
                         lexer->status = LEXER_END_QUOTE;
                     else
                         lexer->status = LEXER_S_QUOTED;
@@ -103,16 +103,19 @@ void better_lex(s_token_list* tokens, char* source, s_node* root_node)
             }
 
             // go to the next character of the source
-            source++;
+            source_index++;
 
-            if(*(source - 1) != '\\' &&
-                    ((*source == '\'' && lexer->status == LEXER_S_QUOTED)
-                     || (*source == '"' && lexer->status == LEXER_D_QUOTED)))
+            if (source_index != 0 && source[source_index - 1] != '\\' &&
+                    ((source[source_index] == '\''
+                      && lexer->status == LEXER_S_QUOTED)
+                     || (source[source_index] == '"'
+                         && lexer->status == LEXER_D_QUOTED)))
             {
                 lexer->current_token_type = STRING;
             }
-            else if(is_special(lexer->status, *source)
-                        || is_special(lexer->status, *(source - 1)))
+            else if (is_special(lexer->status, source[source_index]) ||
+                    (source_index != 0
+                     && is_special(lexer->status, source[source_index - 1])))
             {
                 lexer->status = LEXER_NEXT;
             }
@@ -122,7 +125,7 @@ void better_lex(s_token_list* tokens, char* source, s_node* root_node)
 
         if(lexer->current_str[0] == 0)
         {
-            source++;
+            source_index++;
             free(lexer->current_str);
             continue;
         }

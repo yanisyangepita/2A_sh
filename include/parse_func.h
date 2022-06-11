@@ -17,7 +17,13 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
 void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
+void parse_mkdir(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
+void parse_mv(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
 void parse_pwd(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
+void parse_rm(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
 void parse_touch(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 

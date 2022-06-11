@@ -3,6 +3,7 @@
 char* options_ls[2] = {"a", "l"};
 char* options_cat[1] = {"e"};
 char* options_echo[1] = {"<<"};
+char* options_rm[1] = {"r"};
 
 void exec_cat(s_ast *ast, char **res)
 {
@@ -108,7 +109,7 @@ void exec_cd(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
-    *res = malloc(sizeof(char *));
+    *res = malloc(sizeof(char));
     (*res)[0] = '\0';
 }
 
@@ -142,7 +143,7 @@ void exec_cp(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
-    *res = malloc(sizeof(char *));
+    *res = malloc(sizeof(char));
     (*res)[0] = '\0';
 }
 
@@ -155,9 +156,9 @@ void exec_echo(s_ast *ast, char **res)
         return;
     }
 
-    char **files = malloc(sizeof(char *));
+    char **files = malloc(sizeof(char));
     size_t len_files = 0;
-    char **opt_files = malloc(sizeof(char *));
+    char **opt_files = malloc(sizeof(char));
     size_t len_opt_files = 0;
     char *param = malloc(sizeof(char));
     param[0] = 0;
@@ -272,7 +273,7 @@ void exec_ls(s_ast *ast, char **res)
         {
             if (len_files >= 2)
             {
-                *res = realloc(*res, (sizeof(char *) * (strlen(*res) + 2)));
+                *res = realloc(*res, (sizeof(char) * (strlen(*res) + 2)));
                 char *tmp = *res;
                 sprintf(*res, "%s%s:\n", tmp, files[i]);
             }
@@ -281,7 +282,7 @@ void exec_ls(s_ast *ast, char **res)
                 return;
             if (len_files > 1 && i != len_files - 1)
             {
-                *res = realloc(*res, (sizeof(char *) * (strlen(*res) + 1)));
+                *res = realloc(*res, (sizeof(char) * (strlen(*res) + 1)));
                 char *tmp = *res;
                 sprintf(*res, "%s\n", tmp);
             }
@@ -311,14 +312,127 @@ void exec_ls(s_ast *ast, char **res)
         free(valid_options);
 }
 
+void exec_mkdir(s_ast *ast, char **res)
+{
+    size_t len_files = 0;
+    char **files = NULL;
+    if (ast->right != NULL)
+        files = create_files(&len_files, ast->right->token);
+    else
+        return;
+
+#ifdef DEBUG
+    for (size_t i = 0; i < len_files; i++)
+        printf("files : %s\n", files[i]);
+#endif
+
+    for (size_t i = 0; i < len_files; i++)
+    {
+        my_mkdir(files[i]);
+        if (errno != 0)
+            return;
+    }
+
+    if (files != NULL)
+    {
+        for (size_t i = 0; i < len_files; i++)
+            free(files[i]);
+        free(files);
+    }
+    *res = malloc(sizeof(char));
+    (*res)[0] = '\0';
+}
+
+void exec_mv(s_ast *ast, char **res)
+{
+    size_t len_files = 0;
+    char **files = NULL;
+    if (ast->right != NULL)
+        files = create_files(&len_files, ast->right->token);
+
+    if (len_files < 2)
+    {
+        errno = E_NEED2_PARAMETERS;
+        return;
+    }
+#ifdef DEBUG
+    for (size_t i = 0; i < len_files - 1; i++)
+        printf("mv %s into %s\n", files[i], files[len_files - 1]);
+#endif
+
+    for (size_t i = 0; i < len_files - 1; i++)
+    {
+        mv(files[i], files[len_files - 1]);
+        if (errno != 0)
+            return;
+    }
+
+    if (files != NULL)
+    {
+        for (size_t i = 0; i < len_files; i++)
+            free(files[i]);
+        free(files);
+    }
+    *res = malloc(sizeof(char));
+    (*res)[0] = '\0';
+}
+
 void exec_pwd(s_ast *ast, char **res)
 {
     ast = ast;
     *res = get_wd();
     size_t len = strlen(*res);
-    *res = realloc(*res, sizeof(char *) * (len + 1));
+    *res = realloc(*res, sizeof(char) * (len + 1));
     (*res)[len] = '\n';
     (*res)[len + 1] = '\0';
+}
+
+void exec_rm(s_ast *ast, char **res)
+{
+    size_t len_opt = 0;
+    char **opt = NULL;
+    if (ast->left != NULL)
+        opt = create_opt(&len_opt, ast->left->token);
+
+    size_t len_files = 0;
+    char **files = NULL;
+    if (ast->right != NULL)
+        files = create_files(&len_files, ast->right->token);
+    else
+        return;
+
+#ifdef DEBUG
+    for (size_t i = 0; i < len_files; i++)
+        printf("files : %s\n", files[i]);
+#endif
+
+    size_t len_valid = 0;
+    char **valid_options = NULL;
+    if (ast->left != NULL)
+    {
+        valid_options = get_options(len_opt, opt, 1, options_rm, &len_valid);
+        if (valid_options == NULL)
+        {
+            errno = E_INVALID_OPTION;
+            return;
+        }
+    }
+
+    for (size_t i = 0; i < len_files; i++)
+    {
+        rm(files[i], valid_options);
+        if (errno != 0)
+            return;
+    }
+
+    if (files != NULL)
+    {
+        for (size_t i = 0; i < len_files; i++)
+            free(files[i]);
+        free(files);
+    }
+    *res = malloc(sizeof(char));
+    (*res)[0] = '\0';
 }
 
 void exec_touch(s_ast *ast, char **res)
@@ -348,6 +462,6 @@ void exec_touch(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
-    *res = malloc(sizeof(char *));
+    *res = malloc(sizeof(char));
     (*res)[0] = '\0';
 }
