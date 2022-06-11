@@ -38,7 +38,7 @@ void exec_cat(s_ast *ast, char **res)
 
     for (size_t i = 0; i < len_files; i++)
     {
-        cat(files[i], valid_options);
+        cat(files[i], valid_options, res);
         if (errno != 0)
             return;
     }
