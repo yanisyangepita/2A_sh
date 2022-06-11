@@ -163,3 +163,20 @@ void ls_sort(size_t len_to_sort, char** to_sort)
         }
     }
 }
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : nbrlen                                                     */
+/*                                                                           */
+/* Description  : return len of the number                                   */
+/* ------------------------------------------------------------------------- */
+size_t nbrlen(size_t nbr)
+{
+    size_t res = 1;
+    while (nbr >= 10)
+    {
+        res++;
+        nbr /= 10;
+    }
+    return res;
+}

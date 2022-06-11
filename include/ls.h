@@ -14,6 +14,6 @@
 #include "err.h"
 
 
-void ls(char* directory, size_t len_options, char** options);
+void ls(char* directory, size_t len_options, char** options, char **res);
 
 #endif

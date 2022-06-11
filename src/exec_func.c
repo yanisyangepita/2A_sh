@@ -108,6 +108,8 @@ void exec_cd(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
+    *res = malloc(sizeof(char *));
+    (*res)[0] = '\0';
 }
 
 void exec_cp(s_ast *ast, char **res)
@@ -140,6 +142,8 @@ void exec_cp(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
+    *res = malloc(sizeof(char *));
+    (*res)[0] = '\0';
 }
 
 void exec_echo(s_ast *ast, char **res)
@@ -267,17 +271,25 @@ void exec_ls(s_ast *ast, char **res)
         for (size_t i = 0; i < len_files; i++)
         {
             if (len_files >= 2)
-                printf("%s:\n", files[i]);
-            ls(files[i], len_valid, opt);
+            {
+                *res = realloc(*res, (sizeof(char *) * (strlen(*res) + 2)));
+                char *tmp = *res;
+                sprintf(*res, "%s%s:\n", tmp, files[i]);
+            }
+            ls(files[i], len_valid, opt, res);
             if (errno != 0)
                 return;
             if (len_files > 1 && i != len_files - 1)
-                printf("\n");
+            {
+                *res = realloc(*res, (sizeof(char *) * (strlen(*res) + 1)));
+                char *tmp = *res;
+                sprintf(*res, "%s\n", tmp);
+            }
         }
     }
     else
     {
-        ls(NULL, len_valid, opt);
+        ls(NULL, len_valid, opt, res);
         return;
     }
 
@@ -301,6 +313,7 @@ void exec_ls(s_ast *ast, char **res)
 
 void exec_pwd(s_ast *ast, char **res)
 {
+    ast = ast;
     *res = get_wd();
     size_t len = strlen(*res);
     *res = realloc(*res, sizeof(char *) * (len + 1));
@@ -335,4 +348,6 @@ void exec_touch(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
+    *res = malloc(sizeof(char *));
+    (*res)[0] = '\0';
 }
