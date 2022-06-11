@@ -112,7 +112,7 @@ size_t found_token(s_token_list* tkl, e_token_type type,
     for (size_t i = start; i < end; i++)
     {
         if (tkl->data[i].token_type == type ||
-                tkl->data[i].token_type == NEWLINE)
+                tkl->data[i].token_type == NEW_LINE)
         {
             return i;
         }

@@ -41,7 +41,7 @@ static s_token reserved_words[NB_RESERVED] =
     {"|",     PIPE},
     {"(",     LPAREN},
     {")",     RPAREN},
-    {"\0",    NEWLINE},
+    {"\0",    NEW_LINE},
     {"\"",    DQUOTE},
     {"\'",    SQUOTE},
     {"&&",    AND_IF},
@@ -130,7 +130,7 @@ void search_token(s_token* token, char* str, e_token_type token_type)
 /* ------------------------------------------------------------------------- */
 void create_token(s_token* token, char* str, e_token_type token_type)
 {
-    if(token_type == NEWLINE)
+    if(token_type == NEW_LINE)
         token->str = "\0";
     else if(token_type == BACKSLASH)
         token->str = "\\";
@@ -203,7 +203,7 @@ void test_free_better_tokens(s_token_list* tokens)
 {
     for (size_t i = 0; i < tokens->token_count; i++)
     {
-        if(tokens->data[i].token_type != NEWLINE)
+        if(tokens->data[i].token_type != NEW_LINE)
             free(tokens->data[i].str);
     }
 

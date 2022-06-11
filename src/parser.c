@@ -44,7 +44,7 @@ static s_func reserved_func[46] =
     {NULL,          exec_pipe, PIPE, 1},
     {NULL,          NULL, LPAREN, 0},
     {NULL,          NULL, RPAREN, 0},
-    {NULL,          NULL, NEWLINE, 0},
+    {NULL,          NULL, NEW_LINE, 0},
     {NULL,          NULL, DQUOTE, 0},
     {NULL,          NULL, SQUOTE, 0},
     {NULL,          NULL, OPTION, 0}
@@ -195,14 +195,14 @@ s_ast *make_prog(s_token_list *tkl, size_t start, size_t end)
         {
             prog = ast_create(tkl->data[i]);
             prog->right = ast_create(tkl->data[i + 1]);
-            if (tkl->data[end].token_type != NEWLINE)
+            if (tkl->data[end].token_type != NEW_LINE)
                 end++;
             call_parse_func(prog->right, tkl, i + 2, end);
             prog->left = make_prog(tkl, start, i - 1);
             return prog;
         }
     }
-    if (tkl->data[end].token_type != NEWLINE)
+    if (tkl->data[end].token_type != NEW_LINE)
         end++;
     call_parse_func(prog, tkl, start + 1, end);
     return prog;
@@ -210,7 +210,7 @@ s_ast *make_prog(s_token_list *tkl, size_t start, size_t end)
 
 void parse(s_token_list *tkl)
 {
-    if (tkl->data[0].token_type == NEWLINE)
+    if (tkl->data[0].token_type == NEW_LINE)
         return;
 
     check_grammar(tkl);

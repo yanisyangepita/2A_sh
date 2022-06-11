@@ -45,7 +45,7 @@ static s_token reserved_words[46] =
     {"PIPE",        PIPE},
     {"LPAREN",      LPAREN},
     {"RPAREN",      RPAREN},
-    {"NEWLINE",     NEWLINE},
+    {"NEW_LINE",     NEW_LINE},
     {"DQUOTE",      DQUOTE},
     {"SQUOTE",      SQUOTE},
     {"OPTION",      OPTION}

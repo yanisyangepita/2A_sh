@@ -152,7 +152,7 @@ void better_lex(s_token_list* tokens, char* source, s_node* root_node)
     }
 
     // add the newline token at the end of the token list
-    lexer->current_token_type = NEWLINE;
+    lexer->current_token_type = NEW_LINE;
     lexer->current_str = "";
     add_better_token(tokens, lexer->current_str,
             lexer->current_token_type);

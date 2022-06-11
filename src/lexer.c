@@ -115,8 +115,8 @@ void lex(s_token_list* tokens, char* source)
 
     lex[0] = '\0';
 
-    // NEWLINE
-    create_token(&token, lex, NEWLINE);
+    // NEW_LINE
+    create_token(&token, lex, NEW_LINE);
     add_token(tokens, token);
 
 #ifdef DEBUG
