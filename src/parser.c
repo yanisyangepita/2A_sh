@@ -341,8 +341,9 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
 }
 
-void exec_echo(s_ast *ast)
+void exec_echo(s_ast *ast, char **res)
 {
+    char *result = *res;
     if (ast->right == NULL)
     {
         printf("\n");
@@ -388,13 +389,13 @@ void exec_echo(s_ast *ast)
             to_echo = strcat(to_echo, "\n");
             if (strcmp(opt_files[i], ">") == 0)
             {
-                echo(to_echo, files[i]);
+                echo(to_echo, files[i], &result);
             }
             else
             {
 
                 to_echo = strcat(to_echo, "\n");
-                echo(to_echo, files[i]);
+                echo(to_echo, files[i], &result);
             }
             free(to_echo);
             if (errno != 0)
@@ -403,7 +404,7 @@ void exec_echo(s_ast *ast)
     }
     else
     {
-        echo(param, NULL);
+        echo(param, NULL, &result);
         if (errno != 0)
             return;
     }
@@ -423,14 +424,15 @@ void exec_echo(s_ast *ast)
     }
     free(param);
     free(opt_files);
+    *res = result;
 }
 
-void exec_pipe(s_ast *prog)
+void exec_pipe(s_ast *prog, char **res)
 {
     if (reserved_func[prog->left->token.token_type].is_pipeable
             && reserved_func[prog->right->token.token_type].is_pipeable)
-        reserved_func[prog->left->token.token_type].exec(prog->left);
-    reserved_func[prog->right->token.token_type].exec(prog->right);
+        reserved_func[prog->left->token.token_type].exec(prog->left, res);
+    reserved_func[prog->right->token.token_type].exec(prog->right, res);
 }
 
 void parse_touch(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
@@ -721,11 +723,11 @@ void call_parse_func(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     }
 }
 
-void exec_prog(s_ast *prog)
+void exec_prog(s_ast *prog, char **res)
 {
     if (reserved_func[prog->token.token_type].exec != NULL)
     {
-        reserved_func[prog->token.token_type].exec(prog);
+        reserved_func[prog->token.token_type].exec(prog, res);
         if (errno != 0)
             return;
     }
@@ -860,8 +862,6 @@ void parse(s_token_list *tkl)
 {
     if (tkl->data[0].token_type == NEWLINE)
         return;
-    /* size_t current_index = 0; */
-    /* size_t next_prog = 0; */
 
     check_grammar(tkl);
     if (errno != 0)
@@ -869,22 +869,14 @@ void parse(s_token_list *tkl)
 
     s_ast *prog = make_prog(tkl, 0, tkl->token_count - 1);
 
-    exec_prog(prog);
+    char *res = malloc(sizeof(char));
+    res[0] = '\0';
 
-    /* while (next_prog != tkl->token_count */
-    /*         && tkl->data[next_prog].token_type != NEWLINE) */
-    /* { */
-    /*     prog = ast_create(tkl->data[current_index]); */
-    /*     current_index++; */
+    exec_prog(prog, &res);
 
+    printf("%s", res);
 
-    /*     next_prog = found_token(tkl, PIPE, current_index, tkl->token_count); */
-    /*     found_func(prog, tkl, current_index, next_prog); */
-    /*     next_prog++; */
-    /*     current_index = next_prog; */
-    /*     if (errno != 0) */
-    /*         return; */
-    /* } */
+    free(res);
 
 #ifdef DEBUG
     ast_print(prog, 0);

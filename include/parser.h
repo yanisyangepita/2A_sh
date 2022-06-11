@@ -12,7 +12,7 @@
 #include <errno.h>
 
 typedef void(*func_parse)(s_ast *ast, s_token_list *tkl, size_t cur, size_t end);
-typedef void(*func_exec)(s_ast *ast);
+typedef void(*func_exec)(s_ast *ast, char **res);
 
 typedef struct s_func
 {
@@ -55,9 +55,9 @@ void parse_echo(s_ast *ast, s_token_list *tkl,
 void parse_pwd(s_ast *ast, s_token_list *tkl,
         size_t current, size_t end);
 
-void exec_echo(s_ast *prog);
+void exec_echo(s_ast *prog, char **res);
 
-void exec_pipe(s_ast *prog);
+void exec_pipe(s_ast *prog, char **res);
 
 void parse(s_token_list* tkl);
 
