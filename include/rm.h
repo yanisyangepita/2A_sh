@@ -1,11 +1,16 @@
-#ifndef _2ASH_TOUCH_H
-#define _2ASH_TOUCH_H
+#ifndef _2ASH_RM_H
+#define _2ASH_RM_H
 
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
+#include <dirent.h>
+#include <string.h>
+#include <errno.h>
 
-void rm(const char* filename);
+#include "err.h"
+
+void rm(char* pathname, char** option);
 
 #endif

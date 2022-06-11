@@ -5,10 +5,13 @@
 
 #include "../include/front.h"
 #include "../include/token.h"
-int main(/* int argc, char** argv */)
+#include "../include/test_command.h"
+
+int main(/*int argc, char** argv*/)
 {
+    // test_command(argc, argv);
     front();
-   /*  s_token_list tokens; */
+    /*  s_token_list tokens; */
     /* create_token_list(&tokens, 1); */
     /* lex(&tokens, string); */
     /* free_tokens(&tokens); */

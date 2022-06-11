@@ -3,5 +3,5 @@
 void mv(char* source, char* dest)
 {
     cp(source, dest);
-    rm(source);
+    rm(source, NULL);
 }
