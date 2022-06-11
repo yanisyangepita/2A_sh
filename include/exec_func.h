@@ -23,6 +23,8 @@ void exec_cat(s_ast *ast, char **res);
 
 void exec_cd(s_ast *ast, char **res);
 
+void exec_clear(s_ast *ast, char **res);
+
 void exec_cp(s_ast *ast, char **res);
 
 void exec_echo(s_ast *prog, char **res);

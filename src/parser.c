@@ -15,7 +15,7 @@ static s_func reserved_func[49] =
     {parse_cp,      exec_cp,    CP,         0},
     {parse_cat,     exec_cat,   CAT,        0},
     {parse_echo,    exec_echo,  ECHO,       0},
-    {NULL,          NULL,       CLEAR,      0},
+    {parse_clear,   exec_clear, CLEAR,      0},
     {NULL,          NULL,       IF,         0},
     {NULL,          NULL,       THEN,       0},
     {NULL,          NULL,       ELSE,       0},
@@ -221,11 +221,15 @@ void parse(s_token_list *tkl)
         return;
 
     s_ast *prog = make_prog(tkl, 0, tkl->token_count - 1);
+    if (errno != 0)
+        return;
 
     char *res = malloc(sizeof(char));
     res[0] = '\0';
 
     exec_prog(prog, &res);
+    if (errno != 0)
+        return;
 
     printf("%s", res);
 

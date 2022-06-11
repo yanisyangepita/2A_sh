@@ -22,6 +22,22 @@ void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
 }
 
+void parse_clear(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+    {
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+    if (ast->right != NULL)
+    {
+        errno = E_NACCEPT_PARAMETERS;
+        return;
+    }
+}
+
 void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 {
     ast->left = found_type(tkl, &current, end, OPTION);

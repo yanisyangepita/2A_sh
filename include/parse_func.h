@@ -11,6 +11,8 @@ void parse_cat(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
 void parse_cd(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
+void parse_clear(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
 void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
 void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end);

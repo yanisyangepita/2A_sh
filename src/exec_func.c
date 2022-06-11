@@ -113,6 +113,13 @@ void exec_cd(s_ast *ast, char **res)
     (*res)[0] = '\0';
 }
 
+void exec_clear(s_ast *ast, char **res)
+{
+    ast = ast;
+    *res = malloc(sizeof(char) * 11);
+    sprintf(*res, "\e[1;1H\e[2J");
+}
+
 void exec_cp(s_ast *ast, char **res)
 {
     size_t len_files = 0;
