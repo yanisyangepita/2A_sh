@@ -18,5 +18,6 @@ char** get_options(size_t len_opt, char** options, size_t len_valid_options,
         char** valid_options, size_t* len_final);
 char* lower(char* str);
 void ls_sort(size_t len_to_sort, char** to_sort);
+size_t nbrlen(size_t nbr);
 
 #endif

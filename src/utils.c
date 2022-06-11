@@ -123,6 +123,8 @@ char* lower(char* str)
 /* ------------------------------------------------------------------------- */
 void ls_sort(size_t len_to_sort, char** to_sort)
 {
+    if (len_to_sort == 0)
+        return;
     for(size_t i = 0; i < len_to_sort - 1; i++)
     {
         for(size_t j = i + 1; j < len_to_sort; j++)
@@ -162,4 +164,21 @@ void ls_sort(size_t len_to_sort, char** to_sort)
             }
         }
     }
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : nbrlen                                                     */
+/*                                                                           */
+/* Description  : return len of the number                                   */
+/* ------------------------------------------------------------------------- */
+size_t nbrlen(size_t nbr)
+{
+    size_t res = 1;
+    while (nbr >= 10)
+    {
+        res++;
+        nbr /= 10;
+    }
+    return res;
 }

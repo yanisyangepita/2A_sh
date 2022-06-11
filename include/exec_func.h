@@ -10,7 +10,10 @@
 #include "cp.h"
 #include "echo.h"
 #include "ls.h"
+#include "mkdir.h"
+#include "mv.h"
 #include "pwd.h"
+#include "rm.h"
 #include "touch.h"
 
 #include "err.h"
@@ -26,7 +29,13 @@ void exec_echo(s_ast *prog, char **res);
 
 void exec_ls(s_ast *ast, char **res);
 
+void exec_mkdir(s_ast *ast, char **res);
+
+void exec_mv(s_ast *ast, char **res);
+
 void exec_pwd(s_ast *ast, char **res);
+
+void exec_rm(s_ast *ast, char **res);
 
 void exec_touch(s_ast *ast, char **res);
 

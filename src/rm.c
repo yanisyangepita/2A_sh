@@ -5,7 +5,7 @@ void rm_file(char* pathname)
     int err;
     err = remove(pathname);
     if (err != 0)
-        errx(EXIT_FAILURE, "rm failure");
+        errx(EXIT_FAILURE, "rm failure, %s", pathname);
 }
 
 void rm_dir(char* pathname)
@@ -21,7 +21,6 @@ void rm_dir(char* pathname)
 
 void recursive_rm_dir(char* pathname)
 {
-    // manque le cas où il n y a pas de '/' à la fin de la directory
     DIR* dir;
     dir = opendir(pathname);
     if(!dir)
@@ -39,7 +38,8 @@ void recursive_rm_dir(char* pathname)
     {
         if (d->d_name[0] == '.')
             continue;
-        char* tmp_path = malloc(sizeof(char) * (pathlen + strlen(d->d_name)) +2);
+        char* tmp_path =
+            malloc(sizeof(char) * (pathlen + strlen(d->d_name)) + 2);
         // copy pathname in tmp_path
         strcpy(tmp_path, pathname);
 
@@ -51,13 +51,14 @@ void recursive_rm_dir(char* pathname)
             strcat(tmp_path, "/");
             recursive_rm_dir(tmp_path);
             rm_dir(tmp_path);
+            closedir(dirtmp);
         }
         else
         {
+            errno = 0;
             // if it's a file rm the file
             rm_file(tmp_path);
         }
-        closedir(dirtmp);
         free(tmp_path);
     }
     rm_dir(pathname);
@@ -69,6 +70,13 @@ void rm(char* pathname, char** option)
     DIR* dir = opendir(pathname);
     if(dir)
     {
+        size_t len = strlen(pathname);
+        if (pathname[len - 1] != '/')
+        {
+            pathname = realloc(pathname, len + 2);
+            pathname[len] = '/';
+            pathname[len + 1] = '\0';
+        }
         // Directory exists
         if (option == NULL)
         {
@@ -78,11 +86,11 @@ void rm(char* pathname, char** option)
         {
             recursive_rm_dir(pathname);
         }
-
+        closedir(dir);
     }
     else
     {
+        errno = 0;
         rm_file(pathname);
     }
-    closedir(dir);
 }
