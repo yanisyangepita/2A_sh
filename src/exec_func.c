@@ -301,8 +301,11 @@ void exec_ls(s_ast *ast, char **res)
 
 void exec_pwd(s_ast *ast, char **res)
 {
-    pwd();
-    printf("\n");
+    *res = get_wd();
+    size_t len = strlen(*res);
+    *res = realloc(*res, sizeof(char *) * (len + 1));
+    (*res)[len] = '\n';
+    (*res)[len + 1] = '\0';
 }
 
 void exec_touch(s_ast *ast, char **res)
