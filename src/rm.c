@@ -5,7 +5,10 @@ void rm_file(char* pathname)
     int err;
     err = remove(pathname);
     if (err != 0)
-        errx(EXIT_FAILURE, "rm failure, %s", pathname);
+    {
+        errno = E_INVALID_FILE;
+        return;
+    }
 }
 
 void rm_dir(char* pathname)
@@ -80,7 +83,7 @@ void rm(char* pathname, char** option)
         // Directory exists
         if (option == NULL)
         {
-            errno = E_INVALID_DIR;
+            errno = E_NEED_DIRECTORY;
         }
         else
         {

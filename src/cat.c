@@ -27,14 +27,12 @@ void cat(char* filename, char** options, char **res)
     {
         if(c == '\n' && options != NULL)
         {
-            result = realloc(result, sizeof(char) * (len + 1));
+            result = realloc(result, sizeof(char) * (len + 2));
             result[len] = '$';
             len++;
             result[len] = '\0';
-            /* printf("%s", end); */
         }
-        /* printf("%c", c); */
-        result = realloc(result, sizeof(char) * (len + 1));
+        result = realloc(result, sizeof(char) * (len + 2));
         result[len] = c;
         len++;
         result[len] = '\0';

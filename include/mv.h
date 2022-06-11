@@ -8,6 +8,7 @@
 #include "rm.h"
 #include "cp.h"
 #include "touch.h"
+#include "pwd.h"
 
 void mv(char* source, char* dest);
 

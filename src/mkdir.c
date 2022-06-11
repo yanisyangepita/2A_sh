@@ -10,7 +10,7 @@ void my_mkdir(char* directory_name)
     }
     else
     {
-        errno = E_INVALID_DIR;
+        errno = E_ALREADY_EXIST;
         closedir(dir);
     }
 }

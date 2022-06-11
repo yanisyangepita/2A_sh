@@ -18,7 +18,9 @@ static s_err reserved_err[] =
     {"Invalid directory", E_INVALID_DIR},
     {"Statistics of the file unavailable", E_INVALID_STAT},
     {"UID is unavailable", E_INVALID_UID},
-    {"We live in a society, time is depleted", E_INVALID_TIME}
+    {"We live in a society, time is depleted", E_INVALID_TIME},
+    {"Target need to be a directory", E_NEED_DIRECTORY},
+    {"Target already exists", E_ALREADY_EXIST}
 };
 
 void new_check_error()
