@@ -10,11 +10,11 @@
 /* ------------------------------------------------------------------------- */
 void update_res(char *str, char *pattern, char **res)
 {
-    int found = 0;
+    size_t old_found = 0;
     size_t end = strlen(pattern);
     size_t i = 0;
     size_t i_pattern = 0;
-    while (str[i] != '\0' && !found)
+    while (str[i] != '\0')
     {
         if (str[i] == pattern[i_pattern])
         {
@@ -26,15 +26,38 @@ void update_res(char *str, char *pattern, char **res)
         }
         i++;
         if (i_pattern == end)
-            found = 1;
+        {
+            size_t len = strlen(*res);
+            *res = realloc(*res, sizeof(char) *
+                    (len + 1 + i - end - old_found));
+            // Put line from old_found to i - end (patern length)
+            for (size_t index = old_found; index < i - end; index++)
+            {
+                (*res)[len + index] = str[index];
+            }
+            (*res)[len + i - end] = '\0';
+            // Put the pattern with nice colors
+            *res = realloc(*res, sizeof(char) * (len + end + 1 + 13));
+            char *tmp = *res;
+            sprintf(*res, "%s\033[1;36m%s\033[0m", tmp, pattern);
+            i_pattern = 0;
+            old_found = i - 1;
+        }
     }
-    if (found)
+
+    if (old_found != 0)
     {
-        size_t len = strlen(str) + strlen(*res);
-        *res = realloc(*res, sizeof(char) * (len + 1));
-        char *tmp = *res;
-        sprintf(*res, "%s%s", tmp, str);
+        size_t len = strlen(*res);
+        *res = realloc(*res, sizeof(char) *
+                (len + i - old_found + 1));
+        // Put line from old_found to i - end (patern length)
+        for (size_t index = old_found; index < i; index++)
+        {
+            (*res)[len + index] = str[index];
+        }
+        (*res)[len + i] = '\0';
     }
+
 }
 
 
