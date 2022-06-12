@@ -117,6 +117,36 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 
 
 /* ------------------------------------------------------------------------- */
+/* Function     : parse_grep                                                 */
+/*                                                                           */
+/* Description  : parse the ast with the grep token and fill tne child       */
+/* ------------------------------------------------------------------------- */
+void parse_grep(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    // Fill the left children with the options
+    // The ast will be equal to NULL if there is no options
+    ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+    {
+        // Grep can't be called with options
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
+    // Fill the left ast with the pattern
+    ast->left = get_pattern(tkl, &current, end);
+    if (ast->left == NULL)
+    {
+        // Grep need a pattern
+        errno = E_NEED_PARAMETERS;
+    }
+    // Fill the right children with the parameters
+    // The ast will be equal to NULL if there is no parameters
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+    // Grep can be called without parameters if there is a pipe !
+}
+
+
+/* ------------------------------------------------------------------------- */
 /* Function     : parse_ls                                                   */
 /*                                                                           */
 /* Description  : parse the ast with the ls token and fill tne child         */

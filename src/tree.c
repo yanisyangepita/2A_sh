@@ -23,6 +23,7 @@ static s_token leaf_list[NB_LEAF] =
     {"cat",   CAT},
     {"echo",  ECHO},
     {"clear", CLEAR},
+    {"grep",  GREP},
     {"{",     LBRACE},
     {"}",     RBRACE},
     {"|",     PIPE},

@@ -17,6 +17,8 @@ void parse_cp(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
 void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
+void parse_grep(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
 void parse_ls(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
 void parse_mkdir(s_ast *ast, s_token_list *tkl, size_t current, size_t end);

@@ -6,7 +6,7 @@
 #include <err.h>
 #include <string.h>
 
-#define NB_RESERVED 43
+#define NB_RESERVED 44
 
 typedef enum
 {
@@ -21,7 +21,7 @@ typedef enum
 
     // Commands
     CD, LS, MKDIR, TOUCH, PWD, RM,
-    MV, CP, CAT, ECHO, CLEAR, QUIT,
+    MV, CP, CAT, ECHO, CLEAR, GREP, QUIT,
 
     // Reserved words
     IF, THEN, ELSE, ELIF, FI, DO, DONE,

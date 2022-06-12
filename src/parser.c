@@ -1,6 +1,6 @@
 #include "../include/parser.h"
 
-static s_func reserved_func[50] =
+static s_func reserved_func[51] =
 {
     {NULL,          NULL,       NUMBER,     0},
     {NULL,          NULL,       STRING,     0},
@@ -9,13 +9,14 @@ static s_func reserved_func[50] =
     {parse_ls,      exec_ls,    LS,         0},
     {parse_mkdir,   exec_mkdir, MKDIR,      0},
     {parse_touch,   exec_touch, TOUCH,      0},
-    {parse_pwd,     exec_pwd,   PWD,        0},
+    {parse_pwd,     exec_pwd,   PWD,        1},
     {parse_rm,      exec_rm,    RM,         0},
     {parse_mv,      exec_mv,    MV,         0},
     {parse_cp,      exec_cp,    CP,         0},
-    {parse_cat,     exec_cat,   CAT,        0},
-    {parse_echo,    exec_echo,  ECHO,       0},
+    {parse_cat,     exec_cat,   CAT,        1},
+    {parse_echo,    exec_echo,  ECHO,       1},
     {parse_clear,   exec_clear, CLEAR,      0},
+    {parse_grep,    exec_grep,  GREP,       1},
     {parse_quit,    exec_quit,  QUIT,       0},
     {NULL,          NULL,       IF,         0},
     {NULL,          NULL,       THEN,       0},

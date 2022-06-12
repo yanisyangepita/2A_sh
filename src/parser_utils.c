@@ -165,6 +165,23 @@ s_ast *found_type(s_token_list *tkl, size_t *current, size_t end,
     return ast;
 }
 
+s_ast *get_pattern(s_token_list *tkl, size_t *current, size_t end)
+{
+    size_t i = *current;
+    while (i < end && (tkl->data[i].token_type != IDENTIFIER
+                && tkl->data[i].token_type != STRING))
+        i++;
+    s_ast *ast = NULL;
+    if (i != end)
+    {
+        s_token tok = tkl->data[i];
+        tok.token_type = IDENTIFIER;
+        ast = ast_create(tok);
+        *current = i + 1;
+    }
+    return ast;
+}
+
 void horrible_func(char ***tab_files, size_t *len_files,
         char ***tab_opt_files, size_t *len_opt_files,
         char **tab_param, s_token tok)

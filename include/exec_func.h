@@ -9,6 +9,7 @@
 #include "cd.h"
 #include "cp.h"
 #include "echo.h"
+#include "grep.h"
 #include "ls.h"
 #include "mkdir.h"
 #include "mv.h"
@@ -28,6 +29,8 @@ void exec_clear(s_ast *ast, char **res);
 void exec_cp(s_ast *ast, char **res);
 
 void exec_echo(s_ast *prog, char **res);
+
+void exec_grep(s_ast *prog, char **res);
 
 void exec_ls(s_ast *ast, char **res);
 

@@ -138,6 +138,12 @@ void exec_clear(s_ast *ast, char **res)
     sprintf(*res, "\e[1;1H\e[2J");
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_cp                                                    */
+/*                                                                           */
+/* Description  : exec the ast with the cp token and fill tne res string     */
+/* ------------------------------------------------------------------------- */
 void exec_cp(s_ast *ast, char **res)
 {
     size_t len_files = 0;
@@ -262,6 +268,27 @@ void exec_echo(s_ast *ast, char **res)
     free(param);
     free(opt_files);
     *res = result;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_grep                                                  */
+/*                                                                           */
+/* Description  : exec the ast with the grep token and fill tne res string   */
+/* ------------------------------------------------------------------------- */
+void exec_grep(s_ast *ast, char **res)
+{
+    char *pattern = ast->left->token.str;
+    if (ast->right != NULL)
+    {
+        char *file = ast->right->token.str;
+        grep_file(pattern, file, res);
+    }
+    else
+    {
+        grep_buff(pattern, res);
+    }
+
 }
 
 

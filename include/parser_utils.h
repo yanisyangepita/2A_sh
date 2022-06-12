@@ -21,6 +21,8 @@ char *concat_tokens(s_token_list* tkl, size_t start, size_t end);
 s_ast *found_type(s_token_list *tkl, size_t *current, size_t end,
         e_token_type type);
 
+s_ast *get_pattern(s_token_list *tkl, size_t *current, size_t end);
+
 void horrible_func(char ***tab_files, size_t *len_files,
         char ***tab_opt_files, size_t *len_opt_files,
         char **tab_param, s_token tok);

@@ -3,7 +3,7 @@
 
 #include "token.h"
 
-#define NB_LEAF     25
+#define NB_LEAF     26
 
 struct s_node
 {
