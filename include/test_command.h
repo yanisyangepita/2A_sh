@@ -8,6 +8,7 @@
 
 #include "test_lexer.h"
 #include "mkdir.h"
+#include "mv.h"
 
 void test_command(int argc, char* argv[]);
 
