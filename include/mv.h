@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <string.h>
 
+#include "cd.h"
 #include "rm.h"
 #include "cp.h"
 #include "touch.h"

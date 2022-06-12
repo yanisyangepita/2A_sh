@@ -24,9 +24,9 @@ char* get_file_dir(char* file)
 
 void mv(char* source, char* dest)
 {
-    // check if source = dir
+    // check if dest = dir
     DIR* dir;
-    dir = opendir(source);
+    dir = opendir(dest);
     if (dir)
     {
         errno = E_INVALID_DIR;
@@ -34,15 +34,39 @@ void mv(char* source, char* dest)
         return;
     }
 
-    // get source dir
-    char* source_dir = get_file_dir(source);
-
-    // compare dest_dir and source_dir
-    if (!strcmp(dest, source_dir))
+    // check if source = file
+    FILE* file;
+    file = fopen(source, "r");
+    if (!file)
     {
+        errno = E_INVALID_FILE;
         return;
     }
 
-    cp(source, dest);
-    rm(source, NULL);
+    fclose(file);
+
+    // get dst dir
+    char* old_dir = get_wd();
+    cd(dest);
+    char* dest_dir = get_wd();
+    cd(old_dir);
+
+    // get source dir
+    char* file_dir = get_file_dir(source);
+    cd(file_dir);
+    char* source_dir = get_wd();
+    cd(old_dir);
+
+    // compare dest_dir and source_dir
+    if (strcmp(dest_dir, source_dir))
+    {
+        cp(source, dest);
+        rm(source, NULL);
+    }
+
+    // free char*
+    free(old_dir);
+    free(dest_dir);
+    free(file_dir);
+    free(source_dir);
 }
