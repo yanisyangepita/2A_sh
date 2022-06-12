@@ -5,9 +5,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
+#include <dirent.h>
+#include <string.h>
+
 #include "rm.h"
 #include "cp.h"
 #include "touch.h"
+#include "pwd.h"
+#include "cd.h"
 
 void mv(char* source, char* dest);
 
