@@ -5,6 +5,12 @@ char* options_cat[1] = {"e"};
 char* options_echo[1] = {"<<"};
 char* options_rm[1] = {"r"};
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_cat                                                   */
+/*                                                                           */
+/* Description  : exec the ast with the cat token and fill tne res string    */
+/* ------------------------------------------------------------------------- */
 void exec_cat(s_ast *ast, char **res)
 {
     size_t len_files = 0;
@@ -62,6 +68,12 @@ void exec_cat(s_ast *ast, char **res)
         free(valid_options);
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_cd                                                    */
+/*                                                                           */
+/* Description  : exec the ast with the cd  token and fill tne res string    */
+/* ------------------------------------------------------------------------- */
 void exec_cd(s_ast *ast, char **res)
 {
     size_t len_files = 0;
@@ -113,6 +125,12 @@ void exec_cd(s_ast *ast, char **res)
     (*res)[0] = '\0';
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_clear                                                 */
+/*                                                                           */
+/* Description  : exec the ast with the clear token and fill tne res string  */
+/* ------------------------------------------------------------------------- */
 void exec_clear(s_ast *ast, char **res)
 {
     ast = ast;
@@ -154,6 +172,12 @@ void exec_cp(s_ast *ast, char **res)
     (*res)[0] = '\0';
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_echo                                                  */
+/*                                                                           */
+/* Description  : exec the ast with the echo token and fill tne res string   */
+/* ------------------------------------------------------------------------- */
 void exec_echo(s_ast *ast, char **res)
 {
     char *result = *res;
@@ -240,6 +264,12 @@ void exec_echo(s_ast *ast, char **res)
     *res = result;
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_ls                                                    */
+/*                                                                           */
+/* Description  : exec the ast with the ls token and fill tne res string     */
+/* ------------------------------------------------------------------------- */
 void exec_ls(s_ast *ast, char **res)
 {
     size_t len_opt = 0;
@@ -319,6 +349,12 @@ void exec_ls(s_ast *ast, char **res)
         free(valid_options);
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_mkdir                                                 */
+/*                                                                           */
+/* Description  : exec the ast with the mkdir token and fill tne res string  */
+/* ------------------------------------------------------------------------- */
 void exec_mkdir(s_ast *ast, char **res)
 {
     size_t len_files = 0;
@@ -384,6 +420,12 @@ void exec_mv(s_ast *ast, char **res)
     (*res)[0] = '\0';
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_pwd                                                   */
+/*                                                                           */
+/* Description  : exec the ast with the pwd token and fill tne res string    */
+/* ------------------------------------------------------------------------- */
 void exec_pwd(s_ast *ast, char **res)
 {
     ast = ast;
@@ -394,6 +436,12 @@ void exec_pwd(s_ast *ast, char **res)
     (*res)[len + 1] = '\0';
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_quit                                                  */
+/*                                                                           */
+/* Description  : exec the ast with the quit token and fill tne res string   */
+/* ------------------------------------------------------------------------- */
 void exec_quit(s_ast *ast, char **res)
 {
     ast = ast;
@@ -401,6 +449,12 @@ void exec_quit(s_ast *ast, char **res)
     errno = QUIT;
 }
 
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_rm                                                    */
+/*                                                                           */
+/* Description  : exec the ast with the rm token and fill tne res string     */
+/* ------------------------------------------------------------------------- */
 void exec_rm(s_ast *ast, char **res)
 {
     size_t len_opt = 0;
@@ -449,6 +503,11 @@ void exec_rm(s_ast *ast, char **res)
     (*res)[0] = '\0';
 }
 
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_touch                                                 */
+/*                                                                           */
+/* Description  : exec the ast with the touch token and fill tne res string  */
+/* ------------------------------------------------------------------------- */
 void exec_touch(s_ast *ast, char **res)
 {
     size_t len_files = 0;
