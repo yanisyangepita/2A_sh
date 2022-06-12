@@ -1,7 +1,7 @@
 # Makefile
 
 CPPFLAGS = -MMD
-CC = gcc -lreadline
+CC = gcc -lreadline -g
 CFLAGS = -Wall -Wextra -c -std=c99
 LDFLAGS =
 
@@ -22,7 +22,7 @@ ${EXEC}: ${OBJ}
 .PHONY: clean
 
 debug: all
-debug: CC += -fsanitize=address -DDEBUG -g
+debug: CC += -fsanitize=address -DDEBUG
 
 clean:
 	${RM} ${EXEC}

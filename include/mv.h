@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
+#include <dirent.h>
+#include <string.h>
+
+#include "cd.h"
 #include "rm.h"
 #include "cp.h"
 #include "touch.h"
