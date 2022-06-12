@@ -37,6 +37,8 @@ void exec_mv(s_ast *ast, char **res);
 
 void exec_pwd(s_ast *ast, char **res);
 
+void exec_quit(s_ast *ast, char **res);
+
 void exec_rm(s_ast *ast, char **res);
 
 void exec_touch(s_ast *ast, char **res);

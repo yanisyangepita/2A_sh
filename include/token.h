@@ -21,7 +21,7 @@ typedef enum
 
     // Commands
     CD, LS, MKDIR, TOUCH, PWD, RM,
-    MV, CP, CAT, ECHO, CLEAR,
+    MV, CP, CAT, ECHO, CLEAR, QUIT,
 
     // Reserved words
     IF, THEN, ELSE, ELIF, FI, DO, DONE,

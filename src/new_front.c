@@ -25,6 +25,8 @@ static s_err reserved_err[] =
 
 void new_check_error()
 {
+    if ((int)errno == QUIT)
+        return;
     if (errno != 0)
     {
         printf("\033[1;31m");
@@ -90,10 +92,14 @@ int new_front(void)
         free_tokens(&tokens);
 
         new_check_error();
-
+        if ((int)errno == QUIT) // Check if quit
+            break;
         wd = get_wd();
         printf("2A-SH <%s: %s>$ ",login, wd);
     }
+
+    // Clear
+    printf("\e[H\e[2J\e[3J");
 
     // Free
     free_tree(root_node);

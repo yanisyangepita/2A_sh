@@ -1,7 +1,7 @@
 #include "../include/ast.h"
 
 #ifdef DEBUG
-static s_token reserved_words[49] =
+static s_token reserved_words[50] =
 {
     {"NUMBER",      NUMBER},
     {"STRING",      STRING},
@@ -17,6 +17,7 @@ static s_token reserved_words[49] =
     {"CAT",         CAT},
     {"ECHO",        ECHO},
     {"CLEAR",       CLEAR},
+    {"QUIT",        QUIT},
     {"IF",          IF},
     {"THEN",        THEN},
     {"ELSE",        ELSE},

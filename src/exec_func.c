@@ -394,6 +394,13 @@ void exec_pwd(s_ast *ast, char **res)
     (*res)[len + 1] = '\0';
 }
 
+void exec_quit(s_ast *ast, char **res)
+{
+    ast = ast;
+    *res = malloc(sizeof(char));
+    errno = QUIT;
+}
+
 void exec_rm(s_ast *ast, char **res)
 {
     size_t len_opt = 0;
