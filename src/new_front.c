@@ -62,8 +62,8 @@ int new_front(void)
 "########## ###     ###                            ########  ###    ###       \n"
         );
 
-    sleep(3);
-    printf("\e[H\e[2J\e[3J");
+    //sleep(3);
+    //printf("\e[H\e[2J\e[3J");
     char *login = getlogin();
 
     if(login == NULL)
