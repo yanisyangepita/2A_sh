@@ -37,7 +37,7 @@ static s_token leaf_list[NB_LEAF] =
     {"<>",    LESSGREAT},
     {"<<-",   DLESSDASH},
     {">|",    CLOBBER},
-    {"quit",  QUIT}
+    {"exit",  EXIT}
 };
 
 

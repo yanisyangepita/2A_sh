@@ -18,7 +18,7 @@ static s_token reserved_words[51] =
     {"ECHO",        ECHO},
     {"CLEAR",       CLEAR},
     {"GREP",        GREP},
-    {"QUIT",        QUIT},
+    {"EXIT",        EXIT},
     {"IF",          IF},
     {"THEN",        THEN},
     {"ELSE",        ELSE},

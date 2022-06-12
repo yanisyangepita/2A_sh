@@ -17,7 +17,7 @@ static s_func reserved_func[51] =
     {parse_echo,    exec_echo,  ECHO,       1},
     {parse_clear,   exec_clear, CLEAR,      0},
     {parse_grep,    exec_grep,  GREP,       1},
-    {parse_quit,    exec_quit,  QUIT,       0},
+    {parse_exit,    exec_exit,  EXIT,       0},
     {NULL,          NULL,       IF,         0},
     {NULL,          NULL,       THEN,       0},
     {NULL,          NULL,       ELSE,       0},

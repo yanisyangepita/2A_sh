@@ -117,6 +117,34 @@ void parse_echo(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
 
 
 /* ------------------------------------------------------------------------- */
+/* Function     : parse_exit                                                 */
+/*                                                                           */
+/* Description  : parse the ast with the exit token and fill tne child       */
+/* ------------------------------------------------------------------------- */
+void parse_exit(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    // Fill the left children with the options
+    // The ast will be equal to NULL if there is no options
+    ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+    {
+        // Quit can't be called with options
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
+    // Fill the right children with the parameters
+    // The ast will be equal to NULL if there is no parameters
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+    if (ast->right != NULL)
+    {
+        // Quit can't be called with parameters
+        errno = E_NACCEPT_PARAMETERS;
+        return;
+    }
+}
+
+
+/* ------------------------------------------------------------------------- */
 /* Function     : parse_grep                                                 */
 /*                                                                           */
 /* Description  : parse the ast with the grep token and fill tne child       */
@@ -240,34 +268,6 @@ void parse_pwd(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     if (ast->right != NULL)
     {
         // Pwd can't be called with parameters
-        errno = E_NACCEPT_PARAMETERS;
-        return;
-    }
-}
-
-
-/* ------------------------------------------------------------------------- */
-/* Function     : parse_quit                                                 */
-/*                                                                           */
-/* Description  : parse the ast with the quit token and fill tne child       */
-/* ------------------------------------------------------------------------- */
-void parse_quit(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
-{
-    // Fill the left children with the options
-    // The ast will be equal to NULL if there is no options
-    ast->left = found_type(tkl, &current, end, OPTION);
-    if (ast->left != NULL)
-    {
-        // Quit can't be called with options
-        errno = E_NACCEPT_OPTION;
-        return;
-    }
-    // Fill the right children with the parameters
-    // The ast will be equal to NULL if there is no parameters
-    ast->right = found_type(tkl, &current, end, IDENTIFIER);
-    if (ast->right != NULL)
-    {
-        // Quit can't be called with parameters
         errno = E_NACCEPT_PARAMETERS;
         return;
     }

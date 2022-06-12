@@ -272,6 +272,19 @@ void exec_echo(s_ast *ast, char **res)
 
 
 /* ------------------------------------------------------------------------- */
+/* Function     : exec_exit                                                  */
+/*                                                                           */
+/* Description  : exec the ast with the exit token and fill tne res string   */
+/* ------------------------------------------------------------------------- */
+void exec_exit(s_ast *ast, char **res)
+{
+    ast = ast;
+    *res = malloc(sizeof(char));
+    errno = EXIT;
+}
+
+
+/* ------------------------------------------------------------------------- */
 /* Function     : exec_grep                                                  */
 /*                                                                           */
 /* Description  : exec the ast with the grep token and fill tne res string   */
@@ -465,19 +478,6 @@ void exec_pwd(s_ast *ast, char **res)
 
 
 /* ------------------------------------------------------------------------- */
-/* Function     : exec_quit                                                  */
-/*                                                                           */
-/* Description  : exec the ast with the quit token and fill tne res string   */
-/* ------------------------------------------------------------------------- */
-void exec_quit(s_ast *ast, char **res)
-{
-    ast = ast;
-    *res = malloc(sizeof(char));
-    errno = QUIT;
-}
-
-
-/* ------------------------------------------------------------------------- */
 /* Function     : exec_rm                                                    */
 /*                                                                           */
 /* Description  : exec the ast with the rm token and fill tne res string     */
@@ -529,6 +529,7 @@ void exec_rm(s_ast *ast, char **res)
     *res = malloc(sizeof(char));
     (*res)[0] = '\0';
 }
+
 
 /* ------------------------------------------------------------------------- */
 /* Function     : exec_touch                                                 */

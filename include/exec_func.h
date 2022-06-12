@@ -30,6 +30,8 @@ void exec_cp(s_ast *ast, char **res);
 
 void exec_echo(s_ast *prog, char **res);
 
+void exec_exit(s_ast *ast, char **res);
+
 void exec_grep(s_ast *prog, char **res);
 
 void exec_ls(s_ast *ast, char **res);
@@ -39,8 +41,6 @@ void exec_mkdir(s_ast *ast, char **res);
 void exec_mv(s_ast *ast, char **res);
 
 void exec_pwd(s_ast *ast, char **res);
-
-void exec_quit(s_ast *ast, char **res);
 
 void exec_rm(s_ast *ast, char **res);
 

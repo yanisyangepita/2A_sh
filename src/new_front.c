@@ -25,7 +25,7 @@ static s_err reserved_err[] =
 
 void new_check_error()
 {
-    if ((int)errno == QUIT)
+    if ((int)errno == EXIT)
         return;
     if (errno != 0)
     {
@@ -92,7 +92,7 @@ int new_front(void)
         free_tokens(&tokens);
 
         new_check_error();
-        if ((int)errno == QUIT) // Check if quit
+        if ((int)errno == EXIT) // Check if quit
             break;
         wd = get_wd();
         printf("2A-SH <%s: %s>$ ",login, wd);
