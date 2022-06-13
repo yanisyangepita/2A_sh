@@ -294,8 +294,14 @@ void exec_grep(s_ast *ast, char **res)
     char *pattern = ast->left->token.str;
     if (ast->right != NULL)
     {
-        char *file = ast->right->token.str;
-        grep_file(pattern, file, res);
+
+        size_t len_files = 0;
+        char **files = NULL;
+        files = create_files(&len_files, ast->right->token);
+        int print = len_files >= 2;
+        for (size_t i = 0; i < len_files; i++)
+            grep_file(pattern, files[i], res, print);
+
     }
     else
     {

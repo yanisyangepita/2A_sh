@@ -8,12 +8,14 @@
 /*                                                                           */
 /* Description  :                                                            */
 /* ------------------------------------------------------------------------- */
-void update_res(char *str, char *pattern, char **res)
+void update_res(char *str, char *pattern,
+        char **res, char *filename, int print)
 {
     size_t old_found = 0;
     size_t end = strlen(pattern);
     size_t i = 0;
     size_t i_pattern = 0;
+    size_t nbr_found = 0;
     while (str[i] != '\0')
     {
         if (str[i] == pattern[i_pattern])
@@ -27,9 +29,19 @@ void update_res(char *str, char *pattern, char **res)
         i++;
         if (i_pattern == end)
         {
+            size_t len = strlen(*res);
+            // Print name of the file if needed
+            if (nbr_found == 0 && print)
+            {
+                size_t len_file = strlen(filename);
+                *res = realloc(*res, sizeof(char) * (len + len_file + 20));
+                char *tmp = *res;
+                sprintf(*res, "%s\033[1;35m%s\033[1;36m:\033[0m",
+                        tmp, filename);
+                len = strlen(*res);
+            }
             if (old_found != 0)
                 old_found++;
-            size_t len = strlen(*res);
             *res = realloc(*res, sizeof(char) *
                     (len + 1 + i - end - old_found));
             // Put line from old_found to i - end (patern length)
@@ -37,7 +49,7 @@ void update_res(char *str, char *pattern, char **res)
             {
                 (*res)[len + index - old_found] = str[index];
             }
-            (*res)[len + i - end] = '\0';
+            (*res)[len + i - old_found - end] = '\0';
             // Put the pattern with nice colors
             *res = realloc(*res, sizeof(char) *
                     (len + i - old_found + 1 + 13));
@@ -45,6 +57,7 @@ void update_res(char *str, char *pattern, char **res)
             sprintf(*res, "%s\033[1;31m%s\033[0m", tmp, pattern);
             i_pattern = 0;
             old_found = i - 1;
+            nbr_found++;
         }
     }
 
@@ -69,7 +82,7 @@ void update_res(char *str, char *pattern, char **res)
 /*                                                                           */
 /* Description  :                                                            */
 /* ------------------------------------------------------------------------- */
-void grep_file(char* pattern, char* filename, char **res)
+void grep_file(char* pattern, char* filename, char **res, int print)
 {
     char *result =*res;
     FILE* file = NULL;
@@ -91,7 +104,7 @@ void grep_file(char* pattern, char* filename, char **res)
         line[len_line] = '\0';
         if (c == '\n')
         {
-            update_res(line, pattern, &result);
+            update_res(line, pattern, &result, filename, print);
             line = malloc(sizeof(char));
             len_line = 0;
         }
@@ -127,7 +140,7 @@ void grep_buff(char* pattern, char **res)
         line[len_line] = '\0';
         if (buff[i] == '\n')
         {
-            update_res(line, pattern, &result);
+            update_res(line, pattern, &result, NULL, 0);
             line = malloc(sizeof(char));
             len_line = 0;
         }

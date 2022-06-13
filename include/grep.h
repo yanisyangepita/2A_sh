@@ -9,9 +9,10 @@
 #include "err.h"
 
 
-void update_res(char *str, char *pattern, char **res);
+void update_res(char *str, char *pattern, char **res,
+        char *filename, int print);
 
-void grep_file(char* pattern, char* filename, char **res);
+void grep_file(char* pattern, char* filename, char **res, int print);
 
 void grep_buff(char* pattern, char **res);
 
