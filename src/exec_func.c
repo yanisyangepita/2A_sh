@@ -121,8 +121,7 @@ void exec_cd(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
-    *res = malloc(sizeof(char));
-    (*res)[0] = '\0';
+    *res = *res;
 }
 
 
@@ -174,8 +173,7 @@ void exec_cp(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
-    *res = malloc(sizeof(char));
-    (*res)[0] = '\0';
+    *res = *res;
 }
 
 
@@ -279,7 +277,7 @@ void exec_echo(s_ast *ast, char **res)
 void exec_exit(s_ast *ast, char **res)
 {
     ast = ast;
-    *res = malloc(sizeof(char));
+    res = res;
     errno = EXIT;
 }
 
@@ -428,8 +426,7 @@ void exec_mkdir(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
-    *res = malloc(sizeof(char));
-    (*res)[0] = '\0';
+    *res = *res;
 }
 
 void exec_mv(s_ast *ast, char **res)
@@ -462,8 +459,7 @@ void exec_mv(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
-    *res = malloc(sizeof(char));
-    (*res)[0] = '\0';
+    *res = *res;
 }
 
 
@@ -475,11 +471,12 @@ void exec_mv(s_ast *ast, char **res)
 void exec_pwd(s_ast *ast, char **res)
 {
     ast = ast;
-    *res = get_wd();
+    char *pwd = get_wd();
+    size_t len_pwd = strlen(pwd);
     size_t len = strlen(*res);
-    *res = realloc(*res, sizeof(char) * (len + 1));
-    (*res)[len] = '\n';
-    (*res)[len + 1] = '\0';
+    *res = realloc(*res, sizeof(char) * (len + 2 + len_pwd));
+    char *tmp = *res;
+    sprintf(*res, "%s%s\n", tmp, pwd);
 }
 
 
@@ -532,8 +529,7 @@ void exec_rm(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
-    *res = malloc(sizeof(char));
-    (*res)[0] = '\0';
+    *res = *res;
 }
 
 
@@ -569,6 +565,5 @@ void exec_touch(s_ast *ast, char **res)
             free(files[i]);
         free(files);
     }
-    *res = malloc(sizeof(char));
-    (*res)[0] = '\0';
+    *res = *res;
 }

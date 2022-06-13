@@ -34,7 +34,7 @@ static s_func reserved_func[51] =
     {NULL,          NULL,       RBRACE,     0},
     {NULL,          NULL,       BANG,       0},
     {NULL,          NULL,       IN,         0},
-    {NULL,          NULL,       AND_IF,     0},
+    {NULL,          exec_and,   AND_IF,     0},
     {NULL,          NULL,       OR_IF,      0},
     {NULL,          NULL,       DSEMI,      0},
     {NULL,          NULL,       DLESS,      0},
@@ -54,6 +54,14 @@ static s_func reserved_func[51] =
     {NULL,          NULL,       BACKSLASH,  0},
     {NULL,          NULL,       NONE,       0}
 };
+
+void exec_and(s_ast *prog, char **res)
+{
+    reserved_func[prog->left->token.token_type].exec(prog->left, res);
+    if (errno != 0)
+        return;
+    reserved_func[prog->right->token.token_type].exec(prog->right, res);
+}
 
 void exec_pipe(s_ast *prog, char **res)
 {
@@ -196,7 +204,8 @@ s_ast *make_prog(s_token_list *tkl, size_t start, size_t end)
     s_ast *prog = ast_create(tkl->data[start]);
     for (size_t i = end; i > start; i--)
     {
-        if (tkl->data[i].token_type == PIPE)
+        if (tkl->data[i].token_type == PIPE
+                || tkl->data[i].token_type == AND_IF)
         {
             prog = ast_create(tkl->data[i]);
             prog->right = ast_create(tkl->data[i + 1]);

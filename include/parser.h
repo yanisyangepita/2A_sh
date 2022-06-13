@@ -24,6 +24,8 @@ typedef struct s_func
     int is_pipeable;
 }s_func;
 
+void exec_and(s_ast *prog, char **res);
+
 void exec_pipe(s_ast *prog, char **res);
 
 void call_parse_func(s_ast *ast, s_token_list *tkl,

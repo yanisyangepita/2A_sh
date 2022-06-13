@@ -2,22 +2,23 @@
 
 void echo(char* to_echo, char* file, char **res)
 {
-    char *result = *res;
+    /* char *result = *res; */
     // If one parameter is passed:
     if (file == NULL)
     {
         if (access(to_echo, F_OK) == 0)
         {
             // print the contents of the file.
-            cat(to_echo, NULL, &result);
+            cat(to_echo, NULL, res);
         }
         else
         {
             errno = 0;
             // copy the standard input to the standard output.
-            /* printf("%s\n", to_echo); */
-            result = realloc(result, sizeof(char) * (strlen(to_echo) + 1));
-            sprintf(result, "%s\n", to_echo);
+            *res = realloc(*res, sizeof(char)
+                    * (strlen(*res) + strlen(to_echo) + 2));
+            char *tmp = *res;
+            sprintf(*res, "%s%s\n", tmp, to_echo);
         }
     }
 
@@ -44,5 +45,5 @@ void echo(char* to_echo, char* file, char **res)
             fclose(filefile);
         }
     }
-    *res = result;
+    /* *res = result; */
 }
