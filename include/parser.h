@@ -13,7 +13,8 @@
 #include "pwd.h"
 #include "err.h"
 
-typedef void(*func_parse)(s_ast *ast, s_token_list *tkl, size_t cur, size_t end);
+typedef void(*func_parse)(s_ast *ast, s_token_list *tkl,
+        size_t cur, size_t end);
 typedef void(*func_exec)(s_ast *ast, char **res);
 
 typedef struct s_func

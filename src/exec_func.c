@@ -107,7 +107,7 @@ void exec_cd(s_ast *ast, char **res)
         path[5] = '/';
         path[6] = 0;
         path = strcat(path, login);
-        printf("%s\n", path);
+        /* printf("%s\n", path); */
         cd(path);
         {
             if (errno != 0)
@@ -354,7 +354,8 @@ void exec_ls(s_ast *ast, char **res)
         {
             if (len_files >= 2)
             {
-                *res = realloc(*res, (sizeof(char) * (strlen(*res) + 2)));
+                *res = realloc(*res, (sizeof(char)
+                            * (strlen(*res) + strlen(files[i]) + 2)));
                 char *tmp = *res;
                 sprintf(*res, "%s%s:\n", tmp, files[i]);
             }
@@ -363,7 +364,7 @@ void exec_ls(s_ast *ast, char **res)
                 return;
             if (len_files > 1 && i != len_files - 1)
             {
-                *res = realloc(*res, (sizeof(char) * (strlen(*res) + 1)));
+                *res = realloc(*res, (sizeof(char) * (strlen(*res) + 2)));
                 char *tmp = *res;
                 sprintf(*res, "%s\n", tmp);
             }
