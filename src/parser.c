@@ -14,7 +14,7 @@ static s_func reserved_func[52] =
     {parse_mv,      exec_mv,    MV,         0},
     {parse_cp,      exec_cp,    CP,         0},
     {parse_cat,     exec_cat,   CAT,        1},
-    {parse_echo,    exec_echo,  ECHO,       1},
+    {parse_echo,    exec_echo,  ECHO,       0},
     {parse_clear,   exec_clear, CLEAR,      0},
     {parse_grep,    exec_grep,  GREP,       1},
     {parse_tree,    exec_tree,  TREE,       0},
