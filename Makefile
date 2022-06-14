@@ -21,9 +21,6 @@ ${EXEC}: ${OBJ}
 
 .PHONY: clean
 
-debug: all
-debug: CC += -fsanitize=address -DDEBUG
-
 clean:
 	${RM} ${EXEC}
 	${RM} ${OBJ}

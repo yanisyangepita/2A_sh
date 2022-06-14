@@ -247,8 +247,5 @@ void parse(s_token_list *tkl)
 
     free(res);
 
-#ifdef DEBUG
-    ast_print(prog, 0);
-#endif
     ast_free(prog);
 }

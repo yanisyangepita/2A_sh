@@ -16,8 +16,4 @@ s_ast *ast_create(s_token token);
 
 void ast_free(s_ast* ast);
 
-#ifdef DEBUG
-void ast_print(s_ast* ast, int n);
-#endif
-
 #endif

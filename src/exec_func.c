@@ -23,14 +23,6 @@ void exec_cat(s_ast *ast, char **res)
     if (ast->left != NULL)
         opt = create_opt(&len_opt, ast->left->token);
 
-#ifdef DEBUG
-    for (size_t i = 0; i < len_opt; i++)
-        printf("opt : %s\n", opt[i]);
-
-    for (size_t i = 0; i < len_files; i++)
-        printf("files : %s\n", files[i]);
-#endif
-
     size_t len_valid = 0;
     char **valid_options = NULL;
     if (ast->left != NULL)
@@ -80,14 +72,6 @@ void exec_cd(s_ast *ast, char **res)
     char **files = NULL;
     if (ast->right != NULL)
         files = create_files(&len_files, ast->right->token);
-
-
-#ifdef DEBUG
-    if (files != NULL)
-        printf("cd -> %s\n", files[0]);
-    else
-        printf("cd ->  ~\n");
-#endif
 
     if (files != NULL)
     {
@@ -155,10 +139,6 @@ void exec_cp(s_ast *ast, char **res)
         errno = E_NEED2_PARAMETERS;
         return;
     }
-#ifdef DEBUG
-    for (size_t i = 0; i < len_files - 1; i++)
-        printf("cp %s into %s\n", files[i], files[len_files - 1]);
-#endif
 
     for (size_t i = 0; i < len_files - 1; i++)
     {
@@ -207,18 +187,6 @@ void exec_echo(s_ast *ast, char **res)
     char **opt = NULL;
     if (ast->left != NULL)
         opt = create_opt(&len_opt, ast->left->token);
-
-#ifdef DEBUG
-    for (size_t i = 0; i < len_opt; i++)
-        printf("opt : %s\n", opt[i]);
-
-    for (size_t i = 0; i < len_files; i++)
-        printf("files : %s\n", files[i]);
-
-    for (size_t i = 0; i < len_opt_files; i++)
-        printf("opt_files : %s\n", opt_files[i]);
-    printf("param : %s\n", param);
-#endif
 
     if (len_files != 0)
     {
@@ -326,16 +294,6 @@ void exec_ls(s_ast *ast, char **res)
     if (ast->right != NULL)
         files = create_files(&len_files, ast->right->token);
 
-
-#ifdef DEBUG
-    for (size_t i = 0; i < len_opt; i++)
-        printf("opt : %s\n", opt[i]);
-
-    for (size_t i = 0; i < len_files; i++)
-        printf("files : %s\n", files[i]);
-#endif
-
-
     size_t len_valid = 0;
     char **valid_options = NULL;
     if (ast->left != NULL)
@@ -409,11 +367,6 @@ void exec_mkdir(s_ast *ast, char **res)
     else
         return;
 
-#ifdef DEBUG
-    for (size_t i = 0; i < len_files; i++)
-        printf("files : %s\n", files[i]);
-#endif
-
     for (size_t i = 0; i < len_files; i++)
     {
         my_mkdir(files[i]);
@@ -442,10 +395,6 @@ void exec_mv(s_ast *ast, char **res)
         errno = E_NEED2_PARAMETERS;
         return;
     }
-#ifdef DEBUG
-    for (size_t i = 0; i < len_files - 1; i++)
-        printf("mv %s into %s\n", files[i], files[len_files - 1]);
-#endif
 
     for (size_t i = 0; i < len_files - 1; i++)
     {
@@ -500,11 +449,6 @@ void exec_rm(s_ast *ast, char **res)
     else
         return;
 
-#ifdef DEBUG
-    for (size_t i = 0; i < len_files; i++)
-        printf("files : %s\n", files[i]);
-#endif
-
     size_t len_valid = 0;
     char **valid_options = NULL;
     if (ast->left != NULL)
@@ -547,11 +491,6 @@ void exec_touch(s_ast *ast, char **res)
         files = create_files(&len_files, ast->right->token);
     else
         return;
-
-#ifdef DEBUG
-    for (size_t i = 0; i < len_files; i++)
-        printf("files : %s\n", files[i]);
-#endif
 
     for (size_t i = 0; i < len_files; i++)
     {
