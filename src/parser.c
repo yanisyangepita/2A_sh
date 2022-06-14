@@ -1,6 +1,6 @@
 #include "../include/parser.h"
 
-static s_func reserved_func[51] =
+static s_func reserved_func[52] =
 {
     {NULL,          NULL,       NUMBER,     0},
     {NULL,          NULL,       STRING,     0},
@@ -17,6 +17,7 @@ static s_func reserved_func[51] =
     {parse_echo,    exec_echo,  ECHO,       1},
     {parse_clear,   exec_clear, CLEAR,      0},
     {parse_grep,    exec_grep,  GREP,       1},
+    {parse_tree,    exec_tree,  TREE,       0},
     {parse_exit,    exec_exit,  EXIT,       0},
     {NULL,          NULL,       IF,         0},
     {NULL,          NULL,       THEN,       0},

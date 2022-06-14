@@ -24,6 +24,7 @@ static s_token leaf_list[NB_LEAF] =
     {"echo",  ECHO},
     {"clear", CLEAR},
     {"grep",  GREP},
+    {"tree",  TREE},
     {"{",     LBRACE},
     {"}",     RBRACE},
     {"|",     PIPE},

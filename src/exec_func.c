@@ -568,3 +568,16 @@ void exec_touch(s_ast *ast, char **res)
     }
     *res = *res;
 }
+
+/* ------------------------------------------------------------------------- */
+/* Function     : exec_tree                                                  */
+/*                                                                           */
+/* Description  : exec the ast with the tree  token and fill tne res string  */
+/* ------------------------------------------------------------------------- */
+void exec_tree(s_ast *ast, char **res)
+{
+    ast = ast;
+    char *result = *res;
+    tree(&result);
+    *res = result;
+}

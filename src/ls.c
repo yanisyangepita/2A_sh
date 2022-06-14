@@ -245,9 +245,6 @@ void ls(char* directory, size_t len_options, char** options, char **res)
                 result = realloc(result, (sizeof(char) * len));
                 tmp = result;
                 sprintf(result, "%s\033[1;32m%s \033[0m\n", tmp, to_sort[i]);
-                /* printf("\033[1;32m"); */
-                /* printf("%s ", to_sort[i]); */
-                /* printf("\033[0m"); */
             }
             // - executable
             else if(stats.st_mode & S_IXUSR)
@@ -256,9 +253,6 @@ void ls(char* directory, size_t len_options, char** options, char **res)
                 result = realloc(result, (sizeof(char) * len));
                 tmp = result;
                 sprintf(result, "%s\033[1;36m%s \033[0m\n", tmp, to_sort[i]);
-                /* printf("\033[1;36m"); */
-                /* printf("%s ", to_sort[i]); */
-                /* printf("\033[0m"); */
             }
             // - file
             else

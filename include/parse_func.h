@@ -33,4 +33,6 @@ void parse_rm(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
 void parse_touch(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
 
+void parse_tree(s_ast *ast, s_token_list *tkl, size_t current, size_t end);
+
 #endif

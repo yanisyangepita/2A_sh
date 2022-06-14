@@ -314,3 +314,31 @@ void parse_touch(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
     // The ast will be equal to NULL if there is no parameters
     ast->right = found_type(tkl, &current, end, IDENTIFIER);
 }
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : parse_tree                                                 */
+/*                                                                           */
+/* Description  : parse the ast with the tree token and fill tne child       */
+/* ------------------------------------------------------------------------- */
+void parse_tree(s_ast *ast, s_token_list *tkl, size_t current, size_t end)
+{
+    // Fill the left children with the options
+    // The ast will be equal to NULL if there is no options
+    ast->left = found_type(tkl, &current, end, OPTION);
+    if (ast->left != NULL)
+    {
+        // Tree can't be called with options
+        errno = E_NACCEPT_OPTION;
+        return;
+    }
+    // Fill the right children with the parameters
+    // The ast will be equal to NULL if there is no parameters
+    ast->right = found_type(tkl, &current, end, IDENTIFIER);
+    if (ast->right != NULL)
+    {
+        // Tree can't be called with parameters
+        errno = E_NACCEPT_PARAMETERS;
+        return;
+    }
+}

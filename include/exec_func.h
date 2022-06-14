@@ -46,4 +46,6 @@ void exec_rm(s_ast *ast, char **res);
 
 void exec_touch(s_ast *ast, char **res);
 
+void exec_tree(s_ast *ast, char **res);
+
 #endif
