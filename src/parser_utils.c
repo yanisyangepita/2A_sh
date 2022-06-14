@@ -28,12 +28,18 @@ char **create_opt(size_t *len, s_token tok)
     size_t i_str = 0;
     size_t i = 0;
     size_t i_opt = 0;
+    size_t long_opt = 0;
     while(tok.str[i] != 0)
     {
         if (tok.str[i] == '-')
         {
             i_str = 0;
             i++;
+            if (tok.str[i + 1] == '-')
+            {
+                long_opt = 1;
+                i++;
+            }
         }
         else if (tok.str[i] == ' ')
         {
@@ -44,6 +50,7 @@ char **create_opt(size_t *len, s_token tok)
             i_opt++;
             i_str = 0;
             i++;
+            long_opt = 0;
         }
         else
         {
@@ -52,6 +59,15 @@ char **create_opt(size_t *len, s_token tok)
             i_str++;
             str[i_str] = 0;
             i++;
+            if (!long_opt)
+            {
+                opt = realloc(opt, sizeof(char *) * (i_opt + 1));
+                opt[i_opt] = str;
+                str = malloc(sizeof(char));
+                str[0] = 0;
+                i_opt++;
+                i_str = 0;
+            }
         }
     }
     if (i_str != 0)

@@ -16,6 +16,7 @@
 #include "pwd.h"
 #include "rm.h"
 #include "touch.h"
+#include "cmd_tree.h"
 
 #include "err.h"
 #include <errno.h>
