@@ -30,6 +30,7 @@ char* get_file_name(char* path)
 
         i++;
     }
+    file_name = realloc(file_name, sizeof(char) * (i - index + 1));
     file_name[i - index] = '\0';
 
     return file_name;
@@ -62,6 +63,7 @@ void cp(char* source, char* dest)
 
     if(file2 == NULL)
     {
+        errno = 0;
         // Check if dest is a directory
         DIR* dir = opendir(dest);
         if(dir)
@@ -72,6 +74,13 @@ void cp(char* source, char* dest)
             // touch newfile with the same name as source in the dest directory
             // - get the file name
             char* file_name = get_file_name(source);
+            size_t len = strlen(dest);
+            if (dest[len - 1] != '/')
+            {
+                dest = realloc(dest, sizeof(char) * (len + 2));
+                dest[len] = '/';
+                dest[len + 1] = '\0';
+            }
             char* new_file_path = malloc(sizeof(char) *
                     (strlen(dest) + strlen(source) + 1));
             sprintf(new_file_path, "%s%s", dest, file_name);

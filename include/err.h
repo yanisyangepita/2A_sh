@@ -24,5 +24,8 @@ typedef struct s_err
 #define E_INVALID_STAT 15
 #define E_INVALID_UID 16
 #define E_INVALID_TIME 17
+#define E_NEED_DIRECTORY 18
+#define E_ALREADY_EXIST 19
+#define EXIT 99
 
 #endif

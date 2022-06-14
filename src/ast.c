@@ -1,7 +1,7 @@
 #include "../include/ast.h"
 
 #ifdef DEBUG
-static s_token reserved_words[46] =
+static s_token reserved_words[52] =
 {
     {"NUMBER",      NUMBER},
     {"STRING",      STRING},
@@ -16,6 +16,10 @@ static s_token reserved_words[46] =
     {"CP",          CP},
     {"CAT",         CAT},
     {"ECHO",        ECHO},
+    {"CLEAR",       CLEAR},
+    {"GREP",        GREP},
+    {"TREE",        TREE},
+    {"EXIT",        EXIT},
     {"IF",          IF},
     {"THEN",        THEN},
     {"ELSE",        ELSE},
@@ -45,10 +49,12 @@ static s_token reserved_words[46] =
     {"PIPE",        PIPE},
     {"LPAREN",      LPAREN},
     {"RPAREN",      RPAREN},
-    {"NEWLINE",     NEWLINE},
+    {"NEW_LINE",    NEW_LINE},
     {"DQUOTE",      DQUOTE},
     {"SQUOTE",      SQUOTE},
-    {"OPTION",      OPTION}
+    {"OPTION",      OPTION},
+    {"BACKSLASH",   BACKSLASH},
+    {"NONE",        NONE}
 };
 #endif
 

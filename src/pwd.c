@@ -9,7 +9,6 @@
 /*                                                                           */
 /* Description  : print the current work directory                           */
 /* ------------------------------------------------------------------------- */
-
 void pwd()
 {
     char wd[1024];

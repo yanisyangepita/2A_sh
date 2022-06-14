@@ -1,15 +1,16 @@
-#ifndef _2ASH_MKDIR_H
-#define _2ASH_MKDIR_H
+#ifndef _2ASH_RM_H
+#define _2ASH_RM_H
 
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <err.h>
 #include <dirent.h>
+#include <string.h>
 #include <errno.h>
 
 #include "err.h"
-#include "utils.h"
 
-void my_mkdir(char* directory_name);
+void rm(char* pathname, char** option);
 
 #endif

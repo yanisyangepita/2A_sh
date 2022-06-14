@@ -6,7 +6,7 @@
 #include <err.h>
 #include <string.h>
 
-#define NB_RESERVED 42
+#define NB_RESERVED 45
 
 typedef enum
 {
@@ -21,7 +21,7 @@ typedef enum
 
     // Commands
     CD, LS, MKDIR, TOUCH, PWD, RM,
-    MV, CP, CAT, ECHO,
+    MV, CP, CAT, ECHO, CLEAR, GREP, TREE, EXIT,
 
     // Reserved words
     IF, THEN, ELSE, ELIF, FI, DO, DONE,
@@ -35,7 +35,7 @@ typedef enum
     CLOBBER,
 
     // Other
-    PIPE, LPAREN, RPAREN, NEWLINE, SQUOTE, DQUOTE, OPTION, BACKSLASH, NONE
+    PIPE, LPAREN, RPAREN, NEW_LINE, SQUOTE, DQUOTE, OPTION, BACKSLASH, NONE
 } e_token_type;
 
 typedef struct
@@ -55,6 +55,13 @@ e_token_type check_reserved(char* str);
 e_token_type check_number(char* str);
 void search_token(s_token* token, char* str, e_token_type token_type);
 void create_token(s_token* token, char* str, e_token_type token_type);
+
+void create_better_token(s_token* current_token, char* str,
+        e_token_type token_type);
+void add_better_token(s_token_list* tokens, char* str,
+        e_token_type token_type);
+void free_better_tokens(s_token_list* tokens);
+void test_free_better_tokens(s_token_list* tokens);
 
 void create_token_list(s_token_list* tokens, size_t list_size);
 void add_token(s_token_list* tokens, s_token token);

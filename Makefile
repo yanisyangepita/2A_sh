@@ -1,8 +1,8 @@
 # Makefile
 
 CPPFLAGS = -MMD
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -c -std=c99
+CC = gcc -lreadline -g
+CFLAGS = -Wall -Wextra -c -std=c99
 LDFLAGS =
 
 SRC = ${wildcard src/*.c}
@@ -22,7 +22,7 @@ ${EXEC}: ${OBJ}
 .PHONY: clean
 
 debug: all
-debug: CC += -fsanitize=address -DDEBUG -g
+debug: CC += -fsanitize=address -DDEBUG
 
 clean:
 	${RM} ${EXEC}
@@ -32,3 +32,4 @@ clean:
 -include ${DEP}
 
 # END
+#

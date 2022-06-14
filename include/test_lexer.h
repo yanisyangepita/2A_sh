@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "lexer.h"
+#include "better_lexer.h"
 
 void test_lexer(int argc, char** argv);
 

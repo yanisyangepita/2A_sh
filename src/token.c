@@ -33,6 +33,7 @@ static s_token reserved_words[NB_RESERVED] =
     {"while", WHILE},
     {"until", UNTIL},
     {"for",   FOR},
+    {"clear", CLEAR},
     {"{",     LBRACE},
     {"}",     RBRACE},
     {"!",     BANG},
@@ -40,7 +41,7 @@ static s_token reserved_words[NB_RESERVED] =
     {"|",     PIPE},
     {"(",     LPAREN},
     {")",     RPAREN},
-    {"\0",    NEWLINE},
+    {"\0",    NEW_LINE},
     {"\"",    DQUOTE},
     {"\'",    SQUOTE},
     {"&&",    AND_IF},
@@ -73,7 +74,7 @@ e_token_type check_reserved(char* str)
     }
 
     if(str[0] >= '0' && str[0] <= '9')
-        errx(EXIT_FAILURE, "check_reserved: Not a valid token\n");
+        return NONE;
     else
     {
         return IDENTIFIER;
@@ -129,7 +130,7 @@ void search_token(s_token* token, char* str, e_token_type token_type)
 /* ------------------------------------------------------------------------- */
 void create_token(s_token* token, char* str, e_token_type token_type)
 {
-    if(token_type == NEWLINE)
+    if(token_type == NEW_LINE)
         token->str = "\0";
     else if(token_type == BACKSLASH)
         token->str = "\\";
@@ -139,6 +140,74 @@ void create_token(s_token* token, char* str, e_token_type token_type)
         strcpy(token->str, str);
     }
     token->token_type = token_type;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : create_better_token                                        */
+/*                                                                           */
+/* Description  : initialize a new token attribute (already malloc)          */
+/* ------------------------------------------------------------------------- */
+void create_better_token(s_token* token, char* str,
+        e_token_type token_type)
+{
+    token->str = str;
+    token->token_type = token_type;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : add_better_token                                                  */
+/*                                                                           */
+/* Description  : add the token to the token_list                            */
+/* ------------------------------------------------------------------------- */
+void add_better_token(s_token_list* tokens, char* str, e_token_type token_type)
+{
+    if(tokens->token_count >= tokens->list_size)
+    {
+        tokens->list_size *= 2;
+        tokens->data = (s_token*) realloc(tokens->data,
+                sizeof(s_token) * tokens->list_size);
+    }
+
+    s_token* new_token = &tokens->data[tokens->token_count];
+    create_better_token(new_token, str, token_type);
+    tokens->data[tokens->token_count] = *new_token;
+
+    tokens->token_count++;
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : free_better_tokens                                         */
+/*                                                                           */
+/* Description  : free the token_list                                        */
+/* ------------------------------------------------------------------------- */
+void free_better_tokens(s_token_list* tokens)
+{
+    for (size_t i = 0; i < tokens->token_count; i++)
+    {
+        if (tokens->data[i].token_type == NONE)
+            free(tokens->data[i].str);
+    }
+    free(tokens->data);
+}
+
+
+/* ------------------------------------------------------------------------- */
+/* Function     : test_free_better_tokens                                    */
+/*                                                                           */
+/* Description  : free the token_list                                        */
+/* ------------------------------------------------------------------------- */
+void test_free_better_tokens(s_token_list* tokens)
+{
+    for (size_t i = 0; i < tokens->token_count; i++)
+    {
+        if(tokens->data[i].token_type != NEW_LINE)
+            free(tokens->data[i].str);
+    }
+
+    free(tokens->data);
 }
 
 
@@ -154,6 +223,7 @@ void create_token_list(s_token_list* tokens, size_t list_size)
     tokens->token_count = 0;
     tokens->list_size = list_size;
 }
+
 
 
 /* ------------------------------------------------------------------------- */
@@ -174,7 +244,7 @@ void add_token(s_token_list* tokens, s_token token)
         tokens->data[tokens->token_count] = token;
     else
     {
-        s_token *new_token = &tokens->data[tokens->token_count];
+        s_token* new_token = &tokens->data[tokens->token_count];
         create_token(new_token, token.str, token.token_type);
         tokens->data[tokens->token_count] = *new_token;
     }
