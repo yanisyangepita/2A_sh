@@ -26,4 +26,12 @@
 - touch
 - cat
 - cp
+- ls
 - pwd
+- mkdir
+- rm
+- mv
+- clear
+- exit
+- grep
+- tree
