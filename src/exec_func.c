@@ -470,8 +470,8 @@ void exec_rm(s_ast *ast, char **res)
 
     if (files != NULL)
     {
-        for (size_t i = 0; i < len_files; i++)
-            free(files[i]);
+        /* for (size_t i = 0; i < len_files; i++) */
+        /*     free(files[i]); */
         free(files);
     }
     *res = *res;
