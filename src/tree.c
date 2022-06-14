@@ -104,25 +104,6 @@ void load_leaf(s_token leaf, s_node* root_node)
 }
 
 
-#ifdef DEBUG
-/* ------------------------------------------------------------------------- */
-/* Function     : print_tree                                                 */
-/*                                                                           */
-/* Description  : print all the leaf from the root of a tree                 */
-/* ------------------------------------------------------------------------- */
-void print_tree(s_node* node)
-{
-    // foreach children of the node
-    for(size_t i = 0; i < node->children_count; i++)
-        // call free_tree with all its children
-        print_tree(node->children[i]);
-
-    if(is_leaf_node(node))
-        printf("%s\n", node->leaf_token->str);
-}
-#endif
-
-
 /* ------------------------------------------------------------------------- */
 /* Function     : init_tree                                                  */
 /*                                                                           */
@@ -140,11 +121,6 @@ void init_tree(s_node* root_node)
     // foreach leaf in the leaf list
     for(size_t i = 0; i < NB_LEAF; i++)
         load_leaf(leaf_list[i], root_node);
-/*
-#ifdef DEBUG
-    print_tree(root_node);
-#endif
-*/
 }
 
 
@@ -163,11 +139,6 @@ void free_tree(s_node* node)
 
     if(is_leaf_node(node))
     {
-        /*
-#ifdef DEBUG
-        printf("%s\n", node->leaf_token->str);
-#endif
-*/
         free(node->leaf_token);
     }
 

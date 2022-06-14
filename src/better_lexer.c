@@ -1,7 +1,6 @@
 /* ------------------------------------------------------------------------- */
 /*                             Include File                                  */
 /* ------------------------------------------------------------------------- */
-#include "../include/lexer.h"
 #include "../include/better_lexer.h"
 
 
@@ -162,9 +161,4 @@ void better_lex(s_token_list* tokens, char* source, s_node* root_node)
 
     // Free the lexer
     free(lexer);
-
-#ifdef DEBUG
-    for(size_t i = 0; i < tokens->token_count; i++)
-        printf("%s\n", tokens->data[i].str);
-#endif
 }
