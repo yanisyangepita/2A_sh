@@ -53,8 +53,8 @@ void recursive_rm_dir(char* pathname)
             // if it's a dir recursive_rm_dir
             strcat(tmp_path, "/");
             recursive_rm_dir(tmp_path);
-            rm_dir(tmp_path);
-            closedir(dirtmp);
+            /* rm_dir(tmp_path); */
+            /* closedir(dirtmp); */
         }
         else
         {
